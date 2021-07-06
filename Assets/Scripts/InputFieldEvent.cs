@@ -73,7 +73,6 @@ public class InputFieldEvent : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("マスターサーバーに接続しました");
-        //PhotonNetwork.JoinLobby();
     }
 
     // コールバック：ロビー入室完了

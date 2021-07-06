@@ -32,6 +32,12 @@ public class RoomStatus : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         Debug.Log("ルーム作成RoomStatus");
+        //マスタークライアントの時、Startボタンをアクティブにする
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            var StartButton = Canvas.transform.Find("Start").gameObject;
+            StartButton.SetActive(true);
+        }
         var PlayersCount = PhotonNetwork.CountOfPlayersInRooms + 1;
         num.text = PlayersCount.ToString();
         CreatePanel(PhotonNetwork.NickName);

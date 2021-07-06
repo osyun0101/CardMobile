@@ -58,12 +58,12 @@ EditorBuildSettings:
     path: Assets/Scenes/SelectRoom.unity
     guid: 977779510e4a24964a0033959ada0b16
   - enabled: 1
-    path: Assets/Scenes/RoomIndex.unity
-    guid: 703cbfc002a1e479e937d233d04bd57f
-  - enabled: 1
     path: Assets/Scenes/ReturnRoom.unity
     guid: 6e7a862c11de046dd841a01abffc0ee1
   - enabled: 1
     path: Assets/Scenes/RoomPlayerIndex.unity
     guid: 596375ec7ec1d482a878fd83effa3014
+  - enabled: 1
+    path: Assets/Scenes/PlayRoom.unity
+    guid: 5433a8e774e20472995d84c9e6ed8506
   m_configObjects: {}
