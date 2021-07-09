@@ -33,14 +33,16 @@ public class GameManager : MonoBehaviourPunCallbacks
             var PlayerList = PhotonNetwork.PlayerList;
             foreach(var player in PlayerList)
             {
-                var playerModel = new PlayerModel(player);
+                /*var playerModel = new PlayerModel(player);
                 for(int i = 0; i < 5; i++)
                 {
                     var random = Random.Range(0, cards.Count);
-                    playerModel.hands.Add(random);
+                    playerModel.hands.Add(cards[random]);
                     cards.RemoveAt(random);
-                }
-                playerModelList.Add(playerModel);
+                }*/
+                var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHand", new Vector3(0, 0, 0), Quaternion.identity);
+                playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, cards.ToArray());
+                //playerModelList.Add(playerModel);
             }
         }
     }
