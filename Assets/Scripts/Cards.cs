@@ -4,12 +4,7 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 
-public class Cards : MonoBehaviour
+public class Cards : MonoBehaviourPunCallbacks
 {
     
-    void Start()
-    {
-        var localPlayer = PhotonNetwork.LocalPlayer;
-        
-    }
 }

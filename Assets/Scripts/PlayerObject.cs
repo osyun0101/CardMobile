@@ -7,10 +7,13 @@ using Photon.Realtime;
 public class PlayerObject : MonoBehaviourPunCallbacks
 {
     public PlayerModel playerModel;
+
     [PunRPC]
-    public void SetPlayerModel(int[] cards)
+    public void SetPlayerModel(int[] cardsArr, int playerId)
     {
-        Debug.Log(cards[0]);
-        Debug.Log("testetst");
+        var cards = new List<int>(cardsArr);
+        var player = PhotonNetwork.PlayerList[playerId - 1];
+        playerModel = new PlayerModel(player);
+        playerModel.hands = cards;
     }
 }

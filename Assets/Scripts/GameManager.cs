@@ -4,24 +4,18 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     List<int> cards = new List<int>();
-    public List<PlayerModel> playerModelList = new List<PlayerModel>();
+
     private void Awake()
     {
         Debug.Log("PlayRoomに遷移");
-        /*var PlayerList = PhotonNetwork.PlayerList;
-        foreach(var player in PlayerList)
-        {
-            Debug.Log(player.ActorNumber);
-            Debug.Log(player.NickName);
-        }*/
         // マスタークライアントの時
         if (PhotonNetwork.LocalPlayer.IsMasterClient)
         {
             int num = 1;
-            for (int s = 0; s < 12; s++)
+            for (int s = 0; s < 13; s++)
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -33,17 +27,32 @@ public class GameManager : MonoBehaviourPunCallbacks
             var PlayerList = PhotonNetwork.PlayerList;
             foreach(var player in PlayerList)
             {
-                /*var playerModel = new PlayerModel(player);
-                for(int i = 0; i < 5; i++)
+                List<int> dataList = new List<int>();
+                for (int i = 0; i < 5; i++)
                 {
                     var random = Random.Range(0, cards.Count);
-                    playerModel.hands.Add(cards[random]);
+                    dataList.Add(cards[random]);
                     cards.RemoveAt(random);
-                }*/
+                }
+
                 var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHand", new Vector3(0, 0, 0), Quaternion.identity);
-                playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, cards.ToArray());
-                //playerModelList.Add(playerModel);
+                playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber);
             }
         }
+    }
+
+    // ネットワークオブジェクトが生成された時に呼ばれるコールバック
+    void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (info.Sender.IsLocal)
+        {
+            Debug.Log("自身がネットワークオブジェクトを生成しました");
+        }
+        else
+        {
+            Debug.Log("他プレイヤーがネットワークオブジェクトを生成しました");
+        }
+        /*var PlayerHand = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(PlayerHand.Length);*/
     }
 }
