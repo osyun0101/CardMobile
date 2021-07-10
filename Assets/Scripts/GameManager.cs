@@ -4,8 +4,8 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 
-public class GameManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
-{
+public class GameManager : MonoBehaviour
+{ 
     List<int> cards = new List<int>();
 
     private void Awake()
@@ -39,20 +39,5 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallba
                 playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber);
             }
         }
-    }
-
-    // ネットワークオブジェクトが生成された時に呼ばれるコールバック
-    void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
-    {
-        if (info.Sender.IsLocal)
-        {
-            Debug.Log("自身がネットワークオブジェクトを生成しました");
-        }
-        else
-        {
-            Debug.Log("他プレイヤーがネットワークオブジェクトを生成しました");
-        }
-        /*var PlayerHand = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(PlayerHand.Length);*/
     }
 }
