@@ -4,21 +4,28 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
+public class PlayerObject : MonoBehaviourPunCallbacks
 {
     public PlayerModel playerModel;
 
     [PunRPC]
-    public void SetPlayerModel(int[] cardsArr, int playerId)
+    public void SetPlayerModel(int[] cardsArr, int playerId, int playerListLength)
     {
         var cards = new List<int>(cardsArr);
-        var player = PhotonNetwork.PlayerList[playerId - 1];
+        var playerList = PhotonNetwork.PlayerList;
+        var player = playerList[playerId - 1];
         playerModel = new PlayerModel(player);
         playerModel.hands = cards;
+
+        //最後のオブジェクトが生成された時
+        if(playerId == playerListLength)
+        {
+            GameManager.GetAllPlayerHand();
+        }
     }
 
     // ネットワークオブジェクトが生成された時に呼ばれるコールバック
-    void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
+    /*void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.Sender.IsLocal)
         {
@@ -28,7 +35,7 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         {
             Debug.Log("他プレイヤーがネットワークオブジェクトを生成しました");
         }
-        /*var PlayerHand = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(PlayerHand.Length);*/
-    }
+
+        GameManager.GetAllPlayerHand();
+    }*/
 }

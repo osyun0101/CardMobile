@@ -41,6 +41,7 @@ MonoBehaviour:
   - PlayerCountFunc
   - RPCFunc
   - SetPlayerModel
+  - Photon.Pun.IPunInstantiateMagicCallback.OnPhotonInstantiate
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

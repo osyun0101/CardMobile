@@ -4,9 +4,10 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 { 
     List<int> cards = new List<int>();
+    public List<PlayerModel> playerModels = new List<PlayerModel>();
 
     private void Awake()
     {
@@ -25,7 +26,7 @@ public class GameManager : MonoBehaviour
             }
 
             var PlayerList = PhotonNetwork.PlayerList;
-            foreach(var player in PlayerList)
+            foreach (var player in PlayerList)
             {
                 List<int> dataList = new List<int>();
                 for (int i = 0; i < 5; i++)
@@ -36,8 +37,15 @@ public class GameManager : MonoBehaviour
                 }
 
                 var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHand", new Vector3(0, 0, 0), Quaternion.identity);
-                playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber);
+                playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber, PlayerList.Length);
             }
         }
+    }
+
+    //Rpcで生成したネットワークオブジェクtから実行
+    public static void GetAllPlayerHand()
+    {
+        var PlayerHands = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(PlayerHands.Length);
     }
 }
