@@ -42,10 +42,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //Rpcで生成したネットワークオブジェクtから実行
+    //Rpcで生成したネットワークオブジェクトから実行
     public static void GetAllPlayerHand()
     {
         var PlayerHands = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(PlayerHands.Length);
+        
     }
 }

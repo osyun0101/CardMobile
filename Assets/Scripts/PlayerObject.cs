@@ -25,6 +25,7 @@ public class PlayerObject : MonoBehaviourPunCallbacks
     }
 
     // ネットワークオブジェクトが生成された時に呼ばれるコールバック
+    //こーゆーのもあるってことで残しとこうかな
     /*void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.Sender.IsLocal)
