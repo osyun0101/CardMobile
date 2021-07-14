@@ -7,7 +7,7 @@ using Photon.Pun;
 public class GameManager : MonoBehaviourPunCallbacks
 { 
     List<int> cards = new List<int>();
-    public List<PlayerModel> playerModels = new List<PlayerModel>();
+    public static GameObject[] PlayerHands = new GameObject[] { };
 
     private void Awake()
     {
@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     //Rpcで生成したネットワークオブジェクトから実行
     public static void GetAllPlayerHand()
     {
-        var PlayerHands = GameObject.FindGameObjectsWithTag("Player");
-        
+        PlayerHands = GameObject.FindGameObjectsWithTag("Player");
     }
 }
