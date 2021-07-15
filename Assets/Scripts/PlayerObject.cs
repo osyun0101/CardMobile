@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PlayerObject : MonoBehaviourPunCallbacks
+public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     public PlayerModel playerModel;
 
@@ -16,27 +16,34 @@ public class PlayerObject : MonoBehaviourPunCallbacks
         var player = playerList[playerId - 1];
         playerModel = new PlayerModel(player);
         playerModel.hands = cards;
-
+        /*
         //最後のオブジェクトが生成された時
         if(playerId == playerListLength)
         {
             GameManager.GetAllPlayerHand();
-        }
+        }*/
     }
 
     // ネットワークオブジェクトが生成された時に呼ばれるコールバック
-    //こーゆーのもあるってことで残しとこうかな
-    /*void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
+    void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        if (info.Sender.IsLocal)
+        GameManager.PlayerActorNumber += 1;
+        var parent = GameObject.Find("Canvas").transform;
+        if(GameManager.PlayerActorNumber == PhotonNetwork.PlayerList.Length)
         {
-            Debug.Log("自身がネットワークオブジェクトを生成しました");
+            GameManager.GetAllPlayerHand();
+            var OtherPlayerList = new List<GameObject>(GameManager.PlayerHands);
+            var index = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+            OtherPlayerList[index].SetActive(false);
+            OtherPlayerList.RemoveAt(index);
+            if(OtherPlayerList.Count != 0)
+            {
+                foreach (var obj in OtherPlayerList)
+                {
+                    obj.transform.SetParent(parent);
+                    obj.transform.localScale = new Vector3(1, 1, 1);
+                }
+            }
         }
-        else
-        {
-            Debug.Log("他プレイヤーがネットワークオブジェクトを生成しました");
-        }
-
-        GameManager.GetAllPlayerHand();
-    }*/
+    }
 }

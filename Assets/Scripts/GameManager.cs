@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 { 
     List<int> cards = new List<int>();
     public static GameObject[] PlayerHands = new GameObject[] { };
+    public static int PlayerActorNumber = 0;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             var PlayerList = PhotonNetwork.PlayerList;
+            
             foreach (var player in PlayerList)
             {
                 List<int> dataList = new List<int>();
