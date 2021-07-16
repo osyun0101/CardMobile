@@ -42,6 +42,10 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 {
                     obj.transform.SetParent(parent);
                     obj.transform.localScale = new Vector3(1, 1, 1);
+                    if (OtherPlayerList.Count == 1)
+                    {
+                        obj.transform.localPosition = new Vector3(0, 300, 0);
+                    }
                 }
             }
         }
