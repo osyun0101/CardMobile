@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 
 public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
@@ -45,7 +46,7 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 }
                 else
                 {
-                    var x_y = new List<int[]>();
+                    List<int[]> x_y = new List<int[]>();
                     var reverseX_Y = new List<int[]>();
                     if (count % 2 != 0)
                     {
@@ -61,22 +62,28 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                             updateAngle += angle;
                         }
 
-                        foreach(var re in reverseX_Y)
+                        for(var n = 0; n < reverseX_Y.Count; n++)
                         {
-                            x_y.Add(re);
+                            x_y.Add(reverseX_Y[n]);
+                            reverseX_Y[n] = new int[] { reverseX_Y[n][0], reverseX_Y[n][1]};
                         }
 
-                        reverseX_Y.Reverse();
+                        x_y.Reverse();
                         foreach(var r in reverseX_Y)
                         {
                             r[0] = -r[0];
                         }
                         reverseX_Y.AddRange(x_y);
+                        foreach (var s in reverseX_Y)
+                        {
+                            Debug.Log(s[0]+"x");
+                            Debug.Log(s[1] + "y");
+                        }
                         Set(OtherPlayerList, parent, count, reverseX_Y);
-                        
                     }
                 }
             }
+            Debug.Log("処理完了");
         }
     }
 
