@@ -32,7 +32,6 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
             OtherPlayerList[index].SetActive(false);
             OtherPlayerList.RemoveAt(index);
             var count = OtherPlayerList.Count;
-            float angle;
             if(count != 0)
             {
                 if(count == 1)
@@ -46,8 +45,46 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 }
                 else
                 {
+                    var harfx = Screen.width / 2;
+                    var harfy = Screen.height / 2;
+                    int sideNum;
                     List<int[]> x_y = new List<int[]>();
+                    List<int[]> reverseX_Y = new List<int[]>();
+                    if(count % 2 == 0)
+                    {
+                        sideNum = count / 2;
+                    }
+                    else
+                    {
+                        sideNum = (count - 1) / 2;
+                    }
+                    int splitx = harfx / (sideNum + 1);
+                    int splity = harfy / (sideNum + 1);
+
+                    for(var i = 0; i < count / 2; i++)
+                    {
+                        harfx = harfx - splitx;
+                        harfy = harfy - splity;
+                        var intarr = new int[] { harfx, harfy };
+                        x_y.Add(intarr);
+                        //x_yと同じオブジェクトを参照しない様にするため
+                        intarr = new int[] { harfx, harfy };
+                        reverseX_Y.Add(intarr);
+                    }
+
+                    foreach(var n in x_y)
+                    {
+                        n[0] = -n[0];
+                    }
+                    reverseX_Y.Reverse();
+                    x_y.AddRange(reverseX_Y);
+                    Set(OtherPlayerList, parent, count, x_y);
+
+                    //sinを使用して角度と斜辺から他の辺の長さをx,yとして使用する場合
+                    //真ん中の両端が極端に離れてしまう問題がある
+                    /*List<int[]> x_y = new List<int[]>();
                     var reverseX_Y = new List<int[]>();
+                    float angle;
                     if (count % 2 != 0)
                     {
                         angle = 90f / ((float)count - 1);
@@ -55,37 +92,39 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     else
                     {
                         angle = 90f / (float)count;
-                        var updateAngle = angle;
-                        for(var i = 0; i < count/2; i++)
-                        {
-                            reverseX_Y.Add(CalcXY(updateAngle));
-                            updateAngle += angle;
-                        }
-
-                        for(var n = 0; n < reverseX_Y.Count; n++)
-                        {
-                            x_y.Add(reverseX_Y[n]);
-                            reverseX_Y[n] = new int[] { reverseX_Y[n][0], reverseX_Y[n][1]};
-                        }
-
-                        x_y.Reverse();
-                        foreach(var r in reverseX_Y)
-                        {
-                            r[0] = -r[0];
-                        }
-                        reverseX_Y.AddRange(x_y);
-                        foreach (var s in reverseX_Y)
-                        {
-                            Debug.Log(s[0]+"x");
-                            Debug.Log(s[1] + "y");
-                        }
-                        Set(OtherPlayerList, parent, count, reverseX_Y);
                     }
+
+                    var updateAngle = angle;
+                    for (var i = 0; i < count / 2; i++)
+                    {
+                        reverseX_Y.Add(CalcXY(updateAngle));
+                        updateAngle += angle;
+                    }
+
+                    for (var n = 0; n < reverseX_Y.Count; n++)
+                    {
+                        x_y.Add(reverseX_Y[n]);
+                        reverseX_Y[n] = new int[] { reverseX_Y[n][0], reverseX_Y[n][1] };
+                    }
+
+                    x_y.Reverse();
+                    foreach (var r in reverseX_Y)
+                    {
+                        r[0] = -r[0];
+                    }
+                    reverseX_Y.AddRange(x_y);
+                    foreach (var s in reverseX_Y)
+                    {
+                        Debug.Log(s[0] + "x");
+                        Debug.Log(s[1] + "y");
+                    }
+                    Set(OtherPlayerList, parent, count, reverseX_Y);*/
                 }
             }
         }
     }
 
+    //角度と斜辺から他の辺の長さをsinを使って計算する関数
     public int[] CalcXY(float angle)
     {
         double angleBparse = 180 / angle;
