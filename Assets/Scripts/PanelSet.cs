@@ -22,7 +22,7 @@ public class PanelSet : MonoBehaviourPunCallbacks
             x = 245;
             if (PlayersCount != 2)
             {
-                y -= (PlayersCount / 2) * 75;
+                y -= ((PlayersCount - 2) / 2) * 75;
             }
         }
         else

@@ -83,7 +83,6 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     }
                 }
             }
-            Debug.Log("処理完了");
         }
     }
 
