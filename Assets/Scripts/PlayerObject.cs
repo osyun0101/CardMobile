@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using TMPro;
 
 public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
@@ -17,6 +18,7 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         var player = playerList[playerId - 1];
         playerModel = new PlayerModel(player);
         playerModel.hands = cards;
+        this.GetComponent<TextMeshProUGUI>().text = cards.Count.ToString();
     }
 
     // ネットワークオブジェクトが生成された時に呼ばれるコールバック
@@ -32,6 +34,17 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
             OtherPlayerList[index].SetActive(false);
             OtherPlayerList.RemoveAt(index);
             var count = OtherPlayerList.Count;
+
+            //自分の次の人から左回りになる様にリストを入れ替え
+            if(index != 0 || index != count)
+            {
+                for(var i = index; i < count; i++)
+                {
+                    OtherPlayerList.Insert(0,OtherPlayerList[i]);
+                    OtherPlayerList.RemoveAt(i + 1);
+                }
+            }
+
             if(count != 0)
             {
                 if(count == 1)
@@ -60,15 +73,15 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     }
                     int splitx = harfx / (sideNum + 1);
                     int splity = harfy / (sideNum + 1);
-
+                    int y = 0;
                     for(var i = 0; i < count / 2; i++)
                     {
                         harfx = harfx - splitx;
-                        harfy = harfy - splity;
-                        var intarr = new int[] { harfx, harfy };
+                        y += splity;
+                        var intarr = new int[] { harfx, y };
                         x_y.Add(intarr);
                         //x_yと同じオブジェクトを参照しない様にするため
-                        intarr = new int[] { harfx, harfy };
+                        intarr = new int[] { harfx, y };
                         reverseX_Y.Add(intarr);
                     }
 
@@ -150,7 +163,7 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
             obj.transform.localScale = new Vector3(1, 1, 1);
             if (count % 2 != 0 && count_i == count / 2)
             {
-                obj.transform.localPosition = new Vector3(0, 300, 0);
+                obj.transform.localPosition = new Vector3(0, 330, 0);
                 count_i += 1;
             }
             else
