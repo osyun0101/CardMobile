@@ -18,7 +18,8 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         var player = playerList[playerId - 1];
         playerModel = new PlayerModel(player);
         playerModel.hands = cards;
-        this.GetComponent<TextMeshProUGUI>().text = cards.Count.ToString();
+        this.transform.Find("PlayerHand").GetComponent<TextMeshProUGUI>().text = cards.Count.ToString();
+        this.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = player.NickName;
     }
 
     // ネットワークオブジェクトが生成された時に呼ばれるコールバック
