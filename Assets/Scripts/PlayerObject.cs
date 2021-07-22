@@ -37,12 +37,13 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
             var count = OtherPlayerList.Count;
 
             //自分の次の人から左回りになる様にリストを入れ替え
-            if(index != 0 || index != count)
+            if(index != 0 && index != count)
             {
+                var last_index = count - 1;
                 for(var i = index; i < count; i++)
                 {
-                    OtherPlayerList.Insert(0,OtherPlayerList[i]);
-                    OtherPlayerList.RemoveAt(i + 1);
+                    OtherPlayerList.Insert(0,OtherPlayerList[last_index]);
+                    OtherPlayerList.RemoveAt(last_index + 1);
                 }
             }
 
