@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 { 
-    List<int> cards = new List<int>();
+    public static List<int> cards = new List<int>();
     public static GameObject[] PlayerHands = new GameObject[] { };
     public static int PlayerActorNumber = 0;
 
@@ -41,6 +42,9 @@ public class GameManager : MonoBehaviourPunCallbacks
                 var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHandPanel", new Vector3(0, 0, 0), Quaternion.identity);
                 playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber, PlayerList.Length);
             }
+
+            var cardsResidue = PhotonNetwork.InstantiateRoomObject("CardsResidue", new Vector3(0, 0, 0), Quaternion.identity);
+            cardsResidue.GetComponent<PhotonView>().RPC("cardSet", RpcTarget.All, cards.Count);
         }
     }
 

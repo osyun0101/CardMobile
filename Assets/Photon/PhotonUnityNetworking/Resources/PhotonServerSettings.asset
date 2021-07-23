@@ -42,6 +42,7 @@ MonoBehaviour:
   - RPCFunc
   - SetPlayerModel
   - Photon.Pun.IPunInstantiateMagicCallback.OnPhotonInstantiate
+  - cardSet
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
