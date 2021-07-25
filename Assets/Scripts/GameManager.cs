@@ -6,10 +6,12 @@ using Photon.Pun;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
-{ 
-    public static List<int> cards = new List<int>();
+{
+    //public static List<int> cards = new List<int>();
+    public static List<string> cards = new List<string>();
     public static GameObject[] PlayerHands = new GameObject[] { };
     public static int PlayerActorNumber = 0;
+    string mark;
 
     private void Awake()
     {
@@ -22,7 +24,30 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    cards.Add(num);
+                    
+                    switch (i)
+                    {
+                        case 0:
+                            mark = "Heart";
+                            break;
+                        case 1:
+                            mark = "Club";
+                            break;
+                        case 2:
+                            mark = "Diamond";
+                            break;
+                        case 3:
+                            mark = "Spade";
+                            break;
+                    }
+                    if(num < 10)
+                    {
+                        cards.Add(mark + 0 + num.ToString());
+                    }
+                    else
+                    {
+                        cards.Add(mark + num.ToString());
+                    }
                 }
                 num += 1;
             }
@@ -31,7 +56,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             
             foreach (var player in PlayerList)
             {
-                List<int> dataList = new List<int>();
+                List<string> dataList = new List<string>();
                 for (int i = 0; i < 5; i++)
                 {
                     var random = Random.Range(0, cards.Count);

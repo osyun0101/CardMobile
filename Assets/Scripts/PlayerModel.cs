@@ -6,7 +6,7 @@ using Photon.Realtime;
 public class PlayerModel
 {
     public Player player;
-    public List<int> hands = new List<int>();
+    public List<string> hands = new List<string>();
 
     public PlayerModel(Player localPlayer)
     {

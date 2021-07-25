@@ -11,9 +11,9 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     public PlayerModel playerModel;
 
     [PunRPC]
-    public void SetPlayerModel(int[] cardsArr, int playerId, int playerListLength)
+    public void SetPlayerModel(string[] cardsArr, int playerId, int playerListLength)
     {
-        var cards = new List<int>(cardsArr);
+        var cards = new List<string>(cardsArr);
         var playerList = PhotonNetwork.PlayerList;
         var player = playerList[playerId - 1];
         playerModel = new PlayerModel(player);
