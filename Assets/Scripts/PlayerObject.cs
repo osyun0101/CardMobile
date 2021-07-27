@@ -25,6 +25,9 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     // ネットワークオブジェクトが生成された時に呼ばれるコールバック
     void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
+        Debug.Log("生成されました");
+        
+        //他のプレイヤーの配置
         GameManager.PlayerActorNumber += 1;
         var parent = GameObject.Find("Canvas").transform;
         if(GameManager.PlayerActorNumber == PhotonNetwork.PlayerList.Length)
