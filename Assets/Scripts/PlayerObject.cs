@@ -26,7 +26,12 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
         Debug.Log("生成されました");
-        
+        var Hands = GameManager.SetPlayerHand(PhotonNetwork.LocalPlayer.ActorNumber);
+        if(Hands != null)
+        {
+            Debug.Log(Hands.Length);
+        }
+
         //他のプレイヤーの配置
         GameManager.PlayerActorNumber += 1;
         var parent = GameObject.Find("Canvas").transform;

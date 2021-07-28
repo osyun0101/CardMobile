@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     public static List<string> cards = new List<string>();
     public static GameObject[] PlayerHands = new GameObject[] { };
-    public static List<List<string>> PlayerHandsList = new List<List<string>>();
+    public static Dictionary<int, string[]> PlayerHandsDic = new Dictionary<int, string[]>();
     public static int PlayerActorNumber = 0;
     string mark;
 
@@ -53,20 +53,18 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             var PlayerList = PhotonNetwork.PlayerList;
-            int List_i = 0;
+
             foreach (var player in PlayerList)
             {
                 List<string> dataList = new List<string>();
-                PlayerHandsList.Add(new List<string>());
                 
                 for (int i = 0; i < 5; i++)
                 {
                     var random = Random.Range(0, cards.Count);
                     dataList.Add(cards[random]);
-                    PlayerHandsList[List_i].Add(cards[random]);
                     cards.RemoveAt(random);
                 }
-                List_i += 1;
+                PlayerHandsDic[player.ActorNumber] = dataList.ToArray();
                 var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHandPanel", new Vector3(0, 0, 0), Quaternion.identity);
                 playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber, PlayerList.Length);
             }
@@ -79,5 +77,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static void GetAllPlayerHand()
     {
         PlayerHands = GameObject.FindGameObjectsWithTag("Player");
+    }
+
+    public static string[] SetPlayerHand(int PlayerId)
+    {
+        if (PlayerHandsDic.ContainsKey(PlayerId))
+        {
+            return PlayerHandsDic[PlayerId];
+        }
+        return null;
     }
 }
