@@ -52,6 +52,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 }
                 num += 1;
             }
+            cards.Add("Joker_Color");
+            cards.Add("Joker_Color");
 
             var PlayerList = PhotonNetwork.PlayerList;
 

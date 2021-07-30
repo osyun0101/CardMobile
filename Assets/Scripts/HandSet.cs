@@ -26,9 +26,11 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 
             foreach(var d in data)
             {
-                var path = $"Playing_Cards/Image/PlayingCards/Club01";
+                var cardPanel = Instantiate((GameObject)Resources.Load("HandCardPanel"));
+                var path = $"Playing_Cards/Image/PlayingCards/{d}";
                 var card = Resources.Load<Sprite>(path);
-                Debug.Log(card);
+                cardPanel.GetComponent<Image>().sprite = card;
+                cardPanel.transform.SetParent(parent);
             }
         }
     }
