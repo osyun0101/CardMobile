@@ -23,7 +23,7 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
         if(id == PlayerId)
         {
             var parent = GameObject.Find("Canvas").transform.Find("SelfHandPanel");
-
+            var posx = -250;
             foreach(var d in data)
             {
                 var cardImage = Instantiate((GameObject)Resources.Load("CardImage"));
@@ -31,6 +31,10 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
                 var card = Resources.Load<Sprite>(path);
                 cardImage.GetComponent<Image>().sprite = card;
                 cardImage.transform.SetParent(parent);
+                cardImage.transform.localScale = new Vector3(1, 1, 1);
+                cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200);
+                cardImage.transform.localPosition = new Vector3(posx, 0, 0);
+                posx += 125;
             }
         }
     }
