@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -19,6 +20,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         // マスタークライアントの時
         if (PhotonNetwork.LocalPlayer.IsMasterClient)
         {
+            //誰のターンか示すテキスト
+            var turnText = PhotonNetwork.InstantiateRoomObject("TurnText", new Vector3(0, 0, 0), Quaternion.identity);
+            turnText.GetComponent<PhotonView>().RPC("SetText", RpcTarget.All, PhotonNetwork.NickName);
+            turnText.GetComponent<TextMeshProUGUI>().text = "あなたの番です";
+
             var HandsSetobj = PhotonNetwork.InstantiateRoomObject("HandsSet", new Vector3(0, 0, 0), Quaternion.identity);
             int num = 1;
             for (int s = 0; s < 13; s++)
