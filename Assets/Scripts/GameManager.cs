@@ -21,9 +21,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.LocalPlayer.IsMasterClient)
         {
             //誰のターンか示すテキスト
+            var parent = GameObject.Find("Canvas").transform.Find("SelfHandPanel").Find("YouturnImage");
             var turnText = PhotonNetwork.InstantiateRoomObject("TurnText", new Vector3(0, 0, 0), Quaternion.identity);
             turnText.GetComponent<PhotonView>().RPC("SetText", RpcTarget.All, PhotonNetwork.NickName);
             turnText.GetComponent<TextMeshProUGUI>().text = "あなたの番です";
+            parent.GetComponent<Image>().color = new Color(226.0f/ 255.0f, 85.0f / 255.0f, 80.0f / 255.0f, 1f);
 
             var HandsSetobj = PhotonNetwork.InstantiateRoomObject("HandsSet", new Vector3(0, 0, 0), Quaternion.identity);
             int num = 1;
