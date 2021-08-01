@@ -29,10 +29,10 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
                 var cardImage = Instantiate((GameObject)Resources.Load("CardImage"));
                 var path = $"Playing_Cards/Image/PlayingCards/{d}";
                 var card = Resources.Load<Sprite>(path);
-                cardImage.GetComponent<Image>().sprite = card;
+                cardImage.GetComponent<RawImage>().texture = card.texture;
                 cardImage.transform.SetParent(parent);
                 cardImage.transform.localScale = new Vector3(1, 1, 1);
-                cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200);
+                cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 190);
                 cardImage.transform.localPosition = new Vector3(posx, 0, 0);
                 posx += 125;
             }
