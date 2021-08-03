@@ -27,6 +27,7 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
             foreach(var d in data)
             {
                 var cardImage = Instantiate((GameObject)Resources.Load("CardImage"));
+                cardImage.GetComponent<HandCardScript>().cardName = d;
                 var path = $"Playing_Cards/Image/PlayingCards/{d}";
                 var card = Resources.Load<Sprite>(path);
                 cardImage.GetComponent<RawImage>().texture = card.texture;

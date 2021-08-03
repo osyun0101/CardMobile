@@ -6,8 +6,13 @@ using UnityEngine.UI;
 
 public class HandCardScript : MonoBehaviour, IPointerClickHandler
 {
+    public string cardName;
+
     public void OnPointerClick(PointerEventData pointerData)
     {
+        //セレクトカードマネージャーに選択したカードをセット
+        SelectHandManager.SetSelectCard(cardName);
+
         var x = this.transform.localPosition.x;
         var y = this.transform.localPosition.y;
         var z = this.transform.localPosition.y;

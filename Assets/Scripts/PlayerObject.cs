@@ -33,7 +33,7 @@ public class PlayerObject : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
             GameManager.GetAllPlayerHand();
             var OtherPlayerList = new List<GameObject>(GameManager.PlayerHands);
             var index = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-            OtherPlayerList[index].SetActive(false);
+            //OtherPlayerList[index].SetActive(false);
             OtherPlayerList.RemoveAt(index);
             var count = OtherPlayerList.Count;
 
