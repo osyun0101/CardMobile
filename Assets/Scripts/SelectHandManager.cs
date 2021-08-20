@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class SelectHandManager : MonoBehaviour
 {
-    //public static List<string> selectCards = new List<string>();
     public static List<HandCardScript> selectCards = new List<HandCardScript>();
 
     private void Awake()
@@ -40,16 +39,6 @@ public class SelectHandManager : MonoBehaviour
                 }
                 selectCards = new List<HandCardScript>();
             }
-            /*switch (selectCards.Count)
-            {
-                //選択されているカードが一枚の時
-                case 1:
-                    if(!selectCards[0].Contains(laststr))
-                    {
-                        ResetSelectCard(selectCards[0]);
-                    }
-                    break;
-            }*/
         }
 
         selectCards.Add(card);
