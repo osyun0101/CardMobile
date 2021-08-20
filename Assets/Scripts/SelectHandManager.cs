@@ -1,23 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SelectHandManager : MonoBehaviour
 {
-    public static List<string> selectCards = new List<string>();
+    //public static List<string> selectCards = new List<string>();
+    public static List<HandCardScript> selectCards = new List<HandCardScript>();
 
     private void Awake()
     {
         var PlayeyHand = GameObject.Find("PlayerHandPanel(Clone)").GetComponent<PlayerObject>().playerModel.hands;
     }
 
-    public static void SetSelectCard(string card)
+    public static void SetSelectCard(HandCardScript card)
     {
-        //仕様変更にて一旦この処理コメントアウト
-        /*if(selectCards.Count != 0)
+        if(selectCards.Count != 0)
         {
-            var laststr = LastStr(card);
-            switch (selectCards.Count)
+            var laststr = LastStr(card.cardName);
+            var lastStrCheck = true;
+            foreach(var c in selectCards)
+            {
+                if (!c.cardName.Contains(laststr))
+                {
+                    lastStrCheck = false;
+                    break;
+                }
+            }
+            if (!lastStrCheck)
+            {
+                foreach(var c in selectCards)
+                {
+                    var x = c.transform.localPosition.x;
+                    var y = c.transform.localPosition.y;
+                    var z = c.transform.localPosition.z;
+                    c.transform.localPosition = new Vector3(x, y - 25, z);
+                    c.GetComponent<Outline>().effectColor = new Color(0f, 0f, 0f, 0.5f);
+                    c.GetComponent<Outline>().effectDistance = new Vector2(1f, 1f);
+                }
+                selectCards = new List<HandCardScript>();
+            }
+            /*switch (selectCards.Count)
             {
                 //選択されているカードが一枚の時
                 case 1:
@@ -26,23 +49,15 @@ public class SelectHandManager : MonoBehaviour
                         ResetSelectCard(selectCards[0]);
                     }
                     break;
-            }
-        }*/
+            }*/
+        }
 
         selectCards.Add(card);
-        foreach(var k in selectCards)
-        {
-            Debug.Log(k);
-        }
     }
 
-    public static void ResetSelectCard(string card)
+    public static void ResetSelectCard(HandCardScript card)
     {
         selectCards.Remove(card);
-        foreach(var k in selectCards)
-        {
-            Debug.Log(k);
-        }
     }
 
     public static string LastStr(string str)
