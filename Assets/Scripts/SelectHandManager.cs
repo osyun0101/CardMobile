@@ -7,6 +7,7 @@ public class SelectHandManager : MonoBehaviour
 {
     public static List<HandCardScript> selectCards = new List<HandCardScript>();
     public static bool serial = false;
+    public static bool serial_status = false;
 
     private void Awake()
     {
@@ -17,17 +18,28 @@ public class SelectHandManager : MonoBehaviour
     {
         if (selectCards.Count == 1)
         {
-            int index_0;
-            int cardint;
-            var ParseBool = int.TryParse(LastStr(selectCards[0].cardName), out index_0);
-            var ParseBool2 = int.TryParse(LastStr(card.cardName), out cardint);
-            if(cardint + 1 == index_0 || cardint - 1 == index_0)
+            var cardImage = card.cardName.Substring(0, card.cardName.Length - 2);
+            var selectCardImage = selectCards[0].cardName.Substring(0, selectCards[0].cardName.Length - 2);
+            if(cardImage == selectCardImage)
             {
-                if (ParseBool && ParseBool2)
+                int index_0;
+                int cardint;
+                var ParseBool = int.TryParse(LastStr(selectCards[0].cardName), out index_0);
+                var ParseBool2 = int.TryParse(LastStr(card.cardName), out cardint);
+                if (cardint + 1 == index_0 || cardint - 1 == index_0)
                 {
-                    serial = true;
+                    if (ParseBool && ParseBool2)
+                    {
+                        serial = true;
+                        serial_status = true;
+                    }
                 }
             }
+        }
+
+        if(selectCards.Count >= 2 && serial_status)
+        {
+
         }
 
         if (selectCards.Count != 0)
