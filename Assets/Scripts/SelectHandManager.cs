@@ -16,9 +16,9 @@ public class SelectHandManager : MonoBehaviour
 
     public static void SetSelectCard(HandCardScript card)
     {
+        var cardImage = card.cardName.Substring(0, card.cardName.Length - 2);
         if (selectCards.Count == 1)
         {
-            var cardImage = card.cardName.Substring(0, card.cardName.Length - 2);
             var selectCardImage = selectCards[0].cardName.Substring(0, selectCards[0].cardName.Length - 2);
             if(cardImage == selectCardImage)
             {
@@ -39,7 +39,30 @@ public class SelectHandManager : MonoBehaviour
 
         if(selectCards.Count >= 2 && serial_status)
         {
+            int pramint;
+            var parmnum = int.TryParse(LastStr(card.cardName), out pramint);
+            string ListImage = "";
+            List<int> numList = new List<int>();
+            foreach(var obj in selectCards)
+            {
+                var card_Name = obj.cardName;
+                ListImage = card_Name.Substring(0, card_Name.Length - 2);
+                int card_num;
+                var ParseBl = int.TryParse(LastStr(card_Name), out card_num);
+                if (ParseBl)
+                {
+                    numList.Add(card_num);
+                }
+            }
+            numList.Sort();
 
+            if(numList[0] - 1 == pramint || numList[numList.Count-1] + 1 == pramint)
+            {
+                if(cardImage == ListImage)
+                {
+                    serial = true;
+                }
+            }
         }
 
         if (selectCards.Count != 0)
@@ -69,6 +92,7 @@ public class SelectHandManager : MonoBehaviour
                     }
                     selectCards = new List<HandCardScript>();
                 }
+                serial_status = false;
             }
         }
         serial = false;
