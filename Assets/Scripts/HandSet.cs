@@ -36,6 +36,7 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
                 cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 190);
                 cardImage.transform.localPosition = new Vector3(posx, 0, 0);
                 posx += 125;
+                SelectHandManager.PlayerHands.Add(cardImage);
             }
         }
     }

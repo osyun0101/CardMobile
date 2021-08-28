@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SelectHandManager : MonoBehaviour
 {
     public static List<HandCardScript> selectCards = new List<HandCardScript>();
+    public static List<GameObject> PlayerHands = new List<GameObject>();
     public static bool serial = false;
     public static bool serial_status = false;
 

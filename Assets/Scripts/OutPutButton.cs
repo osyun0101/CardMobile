@@ -17,11 +17,25 @@ public class OutPutButton : MonoBehaviour
         SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
 
         //SelfHandPanelにある手札を削除
-        foreach (var k in selectCards)
+        foreach (var cardobj in selectCards)
         {
-            Destroy(k.gameObject);
+            Destroy(cardobj.gameObject);
         }
 
+        //手札のソート
+        var posx = -250;
+        List<GameObject> newList = new List<GameObject>();
+        foreach (var hand in SelectHandManager.PlayerHands)
+        {
+            if (selectCards.Contains(hand.GetComponent<HandCardScript>()))
+            {
+                continue;
+            }
+            hand.transform.localPosition = new Vector3(posx, 0, 0);
+            posx += 125;
+            newList.Add(hand);
+        }
+        SelectHandManager.PlayerHands = newList;
         //SelectHandManagerのselectCardsフィールドをクリア
         selectCards.Clear();
     }
