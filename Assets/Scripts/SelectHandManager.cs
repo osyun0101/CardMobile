@@ -10,41 +10,53 @@ public class SelectHandManager : MonoBehaviour
     public static bool serial = false;
     public static bool serial_status = false;
 
-    private void Awake()
-    {
-        var PlayeyHand = GameObject.Find("PlayerHandPanel(Clone)").GetComponent<PlayerObject>().playerModel.hands;
-    }
-
     public static void SetSelectCard(HandCardScript card)
     {
         var cardImage = card.cardName.Substring(0, card.cardName.Length - 2);
         if (selectCards.Count == 1)
         {
-            var selectCardImage = selectCards[0].cardName.Substring(0, selectCards[0].cardName.Length - 2);
-            if(cardImage == selectCardImage)
+            if (cardImage.Contains("Joker"))
             {
-                int index_0;
-                int cardint;
-                var ParseBool = int.TryParse(LastStr(selectCards[0].cardName), out index_0);
-                var ParseBool2 = int.TryParse(LastStr(card.cardName), out cardint);
-                if (cardint + 1 == index_0 || cardint - 1 == index_0)
+                serial = true;
+                serial_status = true;
+            }
+            else
+            {
+                var ListTopIndex = selectCards[0].cardName;
+                if (ListTopIndex.Contains("Joker"))
                 {
-                    if (ParseBool && ParseBool2)
+                    serial = true;
+                    serial_status = true;
+                }
+                else
+                {
+                    var selectCardImage = ListTopIndex.Substring(0, selectCards[0].cardName.Length - 2);
+                    if (cardImage == selectCardImage)
                     {
-                        serial = true;
-                        serial_status = true;
+                        int index_0;
+                        int cardint;
+                        var ParseBool = int.TryParse(LastStr(selectCards[0].cardName), out index_0);
+                        var ParseBool2 = int.TryParse(LastStr(card.cardName), out cardint);
+                        if (cardint + 1 == index_0 || cardint - 1 == index_0)
+                        {
+                            if (ParseBool && ParseBool2)
+                            {
+                                serial = true;
+                                serial_status = true;
+                            }
+                        }
                     }
                 }
             }
         }
 
-        if(selectCards.Count >= 2 && serial_status)
+        if (selectCards.Count >= 2 && serial_status)
         {
             int pramint;
             var parmnum = int.TryParse(LastStr(card.cardName), out pramint);
             string ListImage = "";
             List<int> numList = new List<int>();
-            foreach(var obj in selectCards)
+            foreach (var obj in selectCards)
             {
                 var card_Name = obj.cardName;
                 ListImage = card_Name.Substring(0, card_Name.Length - 2);
@@ -57,9 +69,9 @@ public class SelectHandManager : MonoBehaviour
             }
             numList.Sort();
 
-            if(numList[0] - 1 == pramint || numList[numList.Count-1] + 1 == pramint)
+            if (numList[0] - 1 == pramint || numList[numList.Count - 1] + 1 == pramint)
             {
-                if(cardImage == ListImage)
+                if (cardImage == ListImage)
                 {
                     serial = true;
                 }
