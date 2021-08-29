@@ -53,39 +53,72 @@ public class SelectHandManager : MonoBehaviour
         if (selectCards.Count >= 2 && serial_status)
         {
             int pramint;
-            var parmnum = int.TryParse(LastStr(card.cardName), out pramint);
-            string ListImage = "";
-            List<int> numList = new List<int>();
-            foreach (var obj in selectCards)
+            if (!card.cardName.Contains("Joker"))
             {
-                var card_Name = obj.cardName;
-                ListImage = card_Name.Substring(0, card_Name.Length - 2);
-                int card_num;
-                var ParseBl = int.TryParse(LastStr(card_Name), out card_num);
-                if (ParseBl)
+                int.TryParse(LastStr(card.cardName), out pramint);
+                string ListImage = "";
+                List<int> numList = new List<int>();
+                var JokerCount = 0;
+                foreach (var obj in selectCards)
                 {
-                    numList.Add(card_num);
+                    var card_Name = obj.cardName;
+                    if (card_Name.Contains("Joker"))
+                    {
+                        JokerCount += 1;
+                        continue;
+                    }
+                    ListImage = card_Name.Substring(0, card_Name.Length - 2);
+                    int card_num;
+                    var ParseBl = int.TryParse(LastStr(card_Name), out card_num);
+                    if (ParseBl)
+                    {
+                        numList.Add(card_num);
+                    }
                 }
-            }
-            numList.Sort();
+                numList.Sort();
 
-            if (numList[0] - 1 == pramint || numList[numList.Count - 1] + 1 == pramint)
-            {
-                if (cardImage == ListImage)
+                //選択されたカードの数値が同じの時
+                bool sameCards = false;
+                foreach (var num in numList)
                 {
-                    serial = true;
+                    if (num == pramint)
+                    {
+                        sameCards = true;
+                    }
+                }
+
+                //Jokerが既に選択しているカードの中に含まれている場合
+                bool JokerSerial = false;
+                if (JokerCount != 0)
+                {
+                    if (JokerCount == 1 && (numList[0] - 2 == pramint || numList[numList.Count - 1] + 2 == pramint))
+                    {
+                        JokerSerial = true;
+                    }
+                }
+
+                if (numList[0] - 1 == pramint || numList[numList.Count - 1] + 1 == pramint || sameCards || JokerSerial)
+                {
+                    if (cardImage == ListImage || sameCards)
+                    {
+                        serial = true;
+                    }
                 }
             }
         }
 
         if (selectCards.Count != 0)
         {
-            if (!serial)
+            if (!serial && !card.cardName.Contains("Joker"))
             {
                 var laststr = LastStr(card.cardName);
                 var lastStrCheck = true;
                 foreach (var c in selectCards)
                 {
+                    if (c.cardName.Contains("Joker"))
+                    {
+                        continue;
+                    }
                     if (!c.cardName.Contains(laststr))
                     {
                         lastStrCheck = false;
