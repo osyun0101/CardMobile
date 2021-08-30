@@ -12,135 +12,172 @@ public class SelectHandManager : MonoBehaviour
 
     public static void SetSelectCard(HandCardScript card)
     {
-        var cardImage = card.cardName.Substring(0, card.cardName.Length - 2);
-        if (selectCards.Count == 1)
+        //選択されているカードが全てJokerの時の処理
+        bool JokerJudge = true;
+        foreach(var c in selectCards)
         {
-            if (cardImage.Contains("Joker"))
+            if (!c.cardName.Contains("Joker"))
             {
-                serial = true;
-                serial_status = true;
+                JokerJudge = false;
+                break;
             }
-            else
+        }
+
+        if (!JokerJudge)
+        {
+            var cardImage = card.cardName.Substring(0, card.cardName.Length - 2);
+            if (selectCards.Count == 1)
             {
-                var ListTopIndex = selectCards[0].cardName;
-                if (ListTopIndex.Contains("Joker"))
+                if (cardImage.Contains("Joker"))
                 {
                     serial = true;
                     serial_status = true;
                 }
                 else
                 {
-                    var selectCardImage = ListTopIndex.Substring(0, selectCards[0].cardName.Length - 2);
-                    if (cardImage == selectCardImage)
+                    var ListTopIndex = selectCards[0].cardName;
+                    if (ListTopIndex.Contains("Joker"))
                     {
-                        int index_0;
-                        int cardint;
-                        var ParseBool = int.TryParse(LastStr(selectCards[0].cardName), out index_0);
-                        var ParseBool2 = int.TryParse(LastStr(card.cardName), out cardint);
-                        if (cardint + 1 == index_0 || cardint - 1 == index_0)
+                        serial = true;
+                        serial_status = true;
+                    }
+                    else
+                    {
+                        var selectCardImage = ListTopIndex.Substring(0, selectCards[0].cardName.Length - 2);
+                        if (cardImage == selectCardImage)
                         {
-                            if (ParseBool && ParseBool2)
+                            int index_0;
+                            int cardint;
+                            var ParseBool = int.TryParse(LastStr(selectCards[0].cardName), out index_0);
+                            var ParseBool2 = int.TryParse(LastStr(card.cardName), out cardint);
+                            if (cardint + 1 == index_0 || cardint - 1 == index_0)
                             {
-                                serial = true;
-                                serial_status = true;
+                                if (ParseBool && ParseBool2)
+                                {
+                                    serial = true;
+                                    serial_status = true;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        if (selectCards.Count >= 2 && serial_status)
-        {
-            int pramint;
-            if (!card.cardName.Contains("Joker"))
+            if (selectCards.Count >= 2 && serial_status)
             {
-                int.TryParse(LastStr(card.cardName), out pramint);
-                string ListImage = "";
-                List<int> numList = new List<int>();
-                var JokerCount = 0;
-                foreach (var obj in selectCards)
+                int pramint;
+                if (!card.cardName.Contains("Joker"))
                 {
-                    var card_Name = obj.cardName;
-                    if (card_Name.Contains("Joker"))
+                    int.TryParse(LastStr(card.cardName), out pramint);
+                    string ListImage = "";
+                    List<int> numList = new List<int>();
+                    var JokerCount = 0;
+                    foreach (var obj in selectCards)
                     {
-                        JokerCount += 1;
-                        continue;
+                        var card_Name = obj.cardName;
+                        if (card_Name.Contains("Joker"))
+                        {
+                            JokerCount += 1;
+                            continue;
+                        }
+                        ListImage = card_Name.Substring(0, card_Name.Length - 2);
+                        int card_num;
+                        var ParseBl = int.TryParse(LastStr(card_Name), out card_num);
+                        if (ParseBl)
+                        {
+                            numList.Add(card_num);
+                        }
                     }
-                    ListImage = card_Name.Substring(0, card_Name.Length - 2);
-                    int card_num;
-                    var ParseBl = int.TryParse(LastStr(card_Name), out card_num);
-                    if (ParseBl)
-                    {
-                        numList.Add(card_num);
-                    }
-                }
-                numList.Sort();
+                    numList.Sort();
 
-                //選択されたカードの数値が同じの時
-                bool sameCards = false;
-                foreach (var num in numList)
-                {
-                    if (num == pramint)
+                    //選択されたカードの数値が同じの時
+                    bool sameCards = false;
+                    foreach (var num in numList)
                     {
-                        sameCards = true;
+                        if (num == pramint)
+                        {
+                            sameCards = true;
+                        }
+                        else
+                        {
+                            sameCards = false;
+                            break;
+                        }
                     }
-                }
 
-                //Jokerが既に選択しているカードの中に含まれている場合
-                bool JokerSerial = false;
-                if (JokerCount != 0)
-                {
-                    if (JokerCount == 1 && (numList[0] - 2 == pramint || numList[numList.Count - 1] + 2 == pramint))
+                    //選択されたカードが中間の数値の時、(例)5,7が選択されていて6が選ばれた時とか
+                    if(numList.Count == 2)
                     {
-                        JokerSerial = true;
+                         if(numList[0] + 1 == pramint && numList[1] - 1 == pramint)
+                        {
+                            sameCards = true;
+                        }
                     }
-                }
 
-                if (numList[0] - 1 == pramint || numList[numList.Count - 1] + 1 == pramint || sameCards || JokerSerial)
-                {
-                    if (cardImage == ListImage || sameCards)
+                    //Jokerが既に選択しているカードの中に含まれている場合
+                    bool JokerSerial = false;
+                    if (JokerCount != 0)
                     {
-                        serial = true;
+                        if (JokerCount == 1 && (numList[0] - 2 <= pramint || numList[numList.Count - 1] + 2 >= pramint))
+                        {
+                            JokerSerial = true;
+                        }
+                        else if (JokerCount == 2 && (numList[0] - 3 <= pramint || numList[numList.Count - 1] + 3 >= pramint))
+                        {
+                            JokerSerial = true;
+                        }
+                    }
+
+                    if (numList[0] - 1 == pramint || numList[numList.Count - 1] + 1 == pramint || sameCards || JokerSerial)
+                    {
+                        if (cardImage == ListImage || sameCards)
+                        {
+                            serial = true;
+                        }
                     }
                 }
             }
-        }
 
-        if (selectCards.Count != 0)
-        {
-            if (!serial && !card.cardName.Contains("Joker"))
+            if (selectCards.Count != 0)
             {
-                var laststr = LastStr(card.cardName);
-                var lastStrCheck = true;
-                foreach (var c in selectCards)
+                if (!serial && !card.cardName.Contains("Joker"))
                 {
-                    if (c.cardName.Contains("Joker"))
-                    {
-                        continue;
-                    }
-                    if (!c.cardName.Contains(laststr))
-                    {
-                        lastStrCheck = false;
-                        break;
-                    }
-                }
-                if (!lastStrCheck)
-                {
+                    var laststr = LastStr(card.cardName);
+                    var lastStrCheck = true;
                     foreach (var c in selectCards)
                     {
-                        var x = c.transform.localPosition.x;
-                        var y = c.transform.localPosition.y;
-                        var z = c.transform.localPosition.z;
-                        c.transform.localPosition = new Vector3(x, y - 25, z);
-                        c.GetComponent<Outline>().effectColor = new Color(0f, 0f, 0f, 0.5f);
-                        c.GetComponent<Outline>().effectDistance = new Vector2(1f, 1f);
+                        if (c.cardName.Contains("Joker"))
+                        {
+                            continue;
+                        }
+                        if (!c.cardName.Contains(laststr))
+                        {
+                            lastStrCheck = false;
+                            break;
+                        }
                     }
-                    selectCards = new List<HandCardScript>();
+                    if (!lastStrCheck)
+                    {
+                        foreach (var c in selectCards)
+                        {
+                            var x = c.transform.localPosition.x;
+                            var y = c.transform.localPosition.y;
+                            var z = c.transform.localPosition.z;
+                            c.transform.localPosition = new Vector3(x, y - 25, z);
+                            c.GetComponent<Outline>().effectColor = new Color(0f, 0f, 0f, 0.5f);
+                            c.GetComponent<Outline>().effectDistance = new Vector2(1f, 1f);
+                        }
+                        selectCards = new List<HandCardScript>();
+                    }
+                    serial_status = false;
                 }
-                serial_status = false;
             }
         }
+        else
+        {
+            serial_status = true;
+        }
+        
         serial = false;
         selectCards.Add(card);
     }

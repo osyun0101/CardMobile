@@ -24,6 +24,11 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
         {
             var parent = GameObject.Find("Canvas").transform.Find("SelfHandPanel");
             var posx = -250;
+
+            //テスト用
+            data = new string[] { "Joker_Color", "Joker_Color", "Spade05", "Spade06" , "Spade07" };
+            //テスト用
+
             foreach(var d in data)
             {
                 var cardImage = Instantiate((GameObject)Resources.Load("CardImage"));
