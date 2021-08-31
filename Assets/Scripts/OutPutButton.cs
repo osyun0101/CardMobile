@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class OutPutButton : MonoBehaviour
 {
     public GameObject Canvas;
+    public GameObject ErrorPanel;
+
     public void OutputCard()
     {
         var SubmitImagePanel = Canvas.transform.Find("SubmitImage").gameObject;
@@ -58,6 +61,20 @@ public class OutPutButton : MonoBehaviour
 
             //SelectHandManagerのselectCardsフィールドをクリア
             selectCards.Clear();
+        }
+        else
+        {
+            ErrorPanel.SetActive(true);
+            var red = ErrorPanel.GetComponent<Image>().color.r;
+            var green = ErrorPanel.GetComponent<Image>().color.g;
+            var blue = ErrorPanel.GetComponent<Image>().color.b;
+
+            float alfa = 1.0f;
+            for(int i = 0; i < 255; i++)
+            {
+                alfa -= alfa / 255;
+                ErrorPanel.GetComponent<Image>().color = new Color(red, green, blue, alfa);
+            }
         }
     }
 }
