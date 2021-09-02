@@ -4,11 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class OutPutButton : MonoBehaviour
 {
     public GameObject Canvas;
     public GameObject ErrorPanel;
+    public TextMeshProUGUI ErrorText;
+    public bool isFadeOut = false;
+    float speed = 0.001f;
+    float Panelred, Panelgreen, Panelblue, Panelalfa;
+    float Textred, Textgreen, Textblue, Textalfa;
+
+    void Update()
+    {
+        if (isFadeOut)
+        {
+            StartFadeOut();
+        }
+    }
 
     public void OutputCard()
     {
@@ -65,16 +79,36 @@ public class OutPutButton : MonoBehaviour
         else
         {
             ErrorPanel.SetActive(true);
-            var red = ErrorPanel.GetComponent<Image>().color.r;
-            var green = ErrorPanel.GetComponent<Image>().color.g;
-            var blue = ErrorPanel.GetComponent<Image>().color.b;
+            Panelred = ErrorPanel.GetComponent<Image>().color.r;
+            Panelgreen = ErrorPanel.GetComponent<Image>().color.g;
+            Panelblue = ErrorPanel.GetComponent<Image>().color.b;
+            ErrorPanel.GetComponent<Image>().color = new Color(Panelred, Panelgreen, Panelblue, 1.0f);
+            Panelalfa = ErrorPanel.GetComponent<Image>().color.a;
 
-            float alfa = 1.0f;
-            for(int i = 0; i < 255; i++)
-            {
-                alfa -= alfa / 255;
-                ErrorPanel.GetComponent<Image>().color = new Color(red, green, blue, alfa);
-            }
+            Textred = ErrorText.GetComponent<TextMeshProUGUI>().color.r;
+            Textgreen = ErrorText.GetComponent<TextMeshProUGUI>().color.g;
+            Textblue = ErrorText.GetComponent<TextMeshProUGUI>().color.b;
+            ErrorText.GetComponent<TextMeshProUGUI>().color = new Color(Textred, Textgreen, Textblue, 1.0f);
+            Textalfa = ErrorText.GetComponent<TextMeshProUGUI>().color.a;
+            Delay();
         }
+    }
+
+    void StartFadeOut()
+    {
+        Panelalfa -= speed;
+        Textalfa -= speed;
+        ErrorPanel.GetComponent<Image>().color = new Color(Panelred, Panelgreen, Panelblue, Panelalfa);
+        ErrorText.GetComponent<TextMeshProUGUI>().color = new Color(Textred, Textgreen, Textblue, Textalfa);
+        if (Panelalfa  < 0 && Textalfa < 0)
+        {
+            isFadeOut = false;
+        }
+    }
+
+    async void Delay()
+    {
+        await Task.Delay(2000);
+        isFadeOut = true;
     }
 }
