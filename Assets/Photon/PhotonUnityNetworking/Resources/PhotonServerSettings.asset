@@ -45,6 +45,7 @@ MonoBehaviour:
   - cardSet
   - SetHand
   - SetText
+  - SetSubmitImage
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

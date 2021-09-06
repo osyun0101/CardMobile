@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static List<string> cards = new List<string>();
     public static GameObject[] PlayerHands = new GameObject[] { };
     public static int PlayerActorNumber = 0;
+    public GameObject Canvas;
     string mark;
 
     private void Awake()
@@ -78,6 +79,15 @@ public class GameManager : MonoBehaviourPunCallbacks
                 var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHandPanel", new Vector3(0, 0, 0), Quaternion.identity);
                 playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber, PlayerList.Length);
             }
+
+            //開始時に一枚場に捨てて置く時の処理
+            var r = Random.Range(0, cards.Count);
+            var SubmitCard = cards[r];
+            cards.RemoveAt(r);
+            var SubmitImage = PhotonNetwork.InstantiateRoomObject("SubmitImage", new Vector3(-0, 0, 0), Quaternion.identity);
+            SubmitImage.GetComponent<PhotonView>().RPC("SetSubmitImage", RpcTarget.All, SubmitCard);
+
+            //残り枚数を表示する処理
             var cardsResidue = PhotonNetwork.InstantiateRoomObject("CardsResidue", new Vector3(0, 0, 0), Quaternion.identity);
             cardsResidue.GetComponent<PhotonView>().RPC("cardSet", RpcTarget.All, cards.Count);
         }
