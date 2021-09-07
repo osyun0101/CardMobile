@@ -26,7 +26,7 @@ public class OutPutButton : MonoBehaviour
 
     public void OutputCard()
     {
-        var SubmitImagePanel = Canvas.transform.Find("SubmitImage").gameObject;
+        var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
         var selectCards = SelectHandManager.selectCards;
 
         //場に出せる条件に沿っているか検証
@@ -47,6 +47,8 @@ public class OutPutButton : MonoBehaviour
 
         if (Judge)
         {
+            var SelectCardText = Canvas.transform.Find("SelfHandPanel").Find("SelectCardText");
+            SelectCardText.GetComponent<TextMeshProUGUI>().text = "引くカードを選択してください";
             var random = Random.Range(0, selectCards.Count);
             var selectCard = selectCards[random];
             SubmitImagePanel.SetActive(true);
