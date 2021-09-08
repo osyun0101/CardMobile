@@ -49,6 +49,8 @@ public class OutPutButton : MonoBehaviour
         {
             var SelectCardText = Canvas.transform.Find("SelfHandPanel").Find("SelectCardText");
             SelectCardText.GetComponent<TextMeshProUGUI>().text = "引くカードを選択してください";
+
+
             var random = Random.Range(0, selectCards.Count);
             var selectCard = selectCards[random];
             SubmitImagePanel.SetActive(true);
