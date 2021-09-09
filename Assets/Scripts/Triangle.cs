@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Triangle : MonoBehaviour
 {
-    void Start()
+    public void CreateTriangle()
     {
         var mesh = new Mesh();
 
