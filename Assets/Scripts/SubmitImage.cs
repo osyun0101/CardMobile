@@ -6,9 +6,11 @@ using UnityEngine.UI;
 
 public class SubmitImage : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    public string CardName;
     [PunRPC]
     public void SetSubmitImage(string cardName)
     {
+        CardName = cardName;
         var path = $"Playing_Cards/Image/PlayingCards/{cardName}";
         var card = Resources.Load<Sprite>(path);
         this.GetComponent<RawImage>().texture = card.texture;

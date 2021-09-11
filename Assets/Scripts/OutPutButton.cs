@@ -15,7 +15,7 @@ public class OutPutButton : MonoBehaviour
     public GameObject Image;
     GameObject Triangle2;
     public GameObject GetClickPanel;
-    GameObject GetClickPanel2;
+    public GameObject GetClickPanel2;
     public bool isFadeOut = false;
     float speed = 0.001f;
     float Panelred, Panelgreen, Panelblue, Panelalfa;
@@ -71,45 +71,15 @@ public class OutPutButton : MonoBehaviour
             Triangle2.GetComponent<Triangle>().CreateTriangle();
             Triangle.transform.SetParent(SubmitImagePanel.transform);
             Triangle2.transform.SetParent(Image.transform);
-            GetClickPanel2 = Object.Instantiate(GetClickPanel);
             GetClickPanel.transform.SetParent(SubmitImagePanel.transform); //場のカード上に選択用のパネルを設置
             GetClickPanel.transform.localPosition = new Vector3(0, 0, 100);
             GetClickPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(90, SubmitImagePanel.GetComponent<RectTransform>().sizeDelta.y);
             GetClickPanel.SetActive(true);
-            GetClickPanel2.transform.SetParent(Image.transform);　//山札のカード上に選択用のパネルを設置
-            GetClickPanel2.transform.localScale = new Vector3(1, 1, 1);
+            GetClickPanel2.transform.SetParent(Image.transform); //場のカード上に選択用のパネルを設置
+            GetClickPanel2.transform.localPosition = new Vector3(0, 0, 100);
             GetClickPanel2.GetComponent<RectTransform>().sizeDelta = new Vector2(90, Image.GetComponent<RectTransform>().sizeDelta.y);
             GetClickPanel2.SetActive(true);
             moveTriangle = true;
-
-            var random = Random.Range(0, selectCards.Count);
-            var selectCard = selectCards[random];
-            SubmitImagePanel.SetActive(true);
-            SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
-
-            //SelfHandPanelにある手札を削除
-            foreach (var cardobj in selectCards)
-            {
-                Destroy(cardobj.gameObject);
-            }
-
-            //手札のソート
-            var posx = -250;
-            List<GameObject> newList = new List<GameObject>();
-            foreach (var hand in SelectHandManager.PlayerHands)
-            {
-                if (selectCards.Contains(hand.GetComponent<HandCardScript>()))
-                {
-                    continue;
-                }
-                hand.transform.localPosition = new Vector3(posx, 0, 0);
-                posx += 125;
-                newList.Add(hand);
-            }
-            SelectHandManager.PlayerHands = newList;
-
-            //SelectHandManagerのselectCardsフィールドをクリア
-            selectCards.Clear();
         }
         else
         {
@@ -168,5 +138,49 @@ public class OutPutButton : MonoBehaviour
         }
         Triangle.transform.localPosition = new Vector3(0, TriangleY, 100);
         Triangle2.transform.localPosition = new Vector3(0, TriangleY, 100);
+    }
+
+    //場に捨てるカードを設置する処理
+    public static void SetSubmit(GameObject canvas, GameObject ClickObject, GameObject SelfHandPanel)
+    {
+        var SubmitImagePanel = canvas.transform.Find("SubmitImage(Clone)").gameObject;
+        var selectCards = SelectHandManager.selectCards;
+        var random = Random.Range(0, selectCards.Count);
+        var selectCard = selectCards[random];
+        SubmitImagePanel.SetActive(true);
+
+        var cardImage = Instantiate((GameObject)Resources.Load("CardImage"));
+        cardImage.GetComponent<HandCardScript>().cardName = SubmitImagePanel.GetComponent<SubmitImage>().CardName;
+        cardImage.GetComponent<RawImage>().texture = SubmitImagePanel.GetComponent<RawImage>().texture;
+        cardImage.transform.SetParent(SelfHandPanel.transform);
+        cardImage.transform.localScale = new Vector3(1, 1, 1);
+        cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 190);
+        SelectHandManager.PlayerHands.Add(cardImage);
+
+        SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
+
+        //SelfHandPanelにある手札を削除
+        foreach (var cardobj in selectCards)
+        {
+            Destroy(cardobj.gameObject);
+        }
+        //手札のソート
+        var posx = -250;
+        List<GameObject> newList = new List<GameObject>();
+        foreach (var hand in SelectHandManager.PlayerHands)
+        {
+            if (selectCards.Contains(hand.GetComponent<HandCardScript>()))
+            {
+                continue;
+            }
+            hand.transform.localPosition = new Vector3(posx, 0, 0);
+            posx += 125;
+            newList.Add(hand);
+        }
+        SelectHandManager.PlayerHands = newList;
+
+        //SelectHandManagerのselectCardsフィールドをクリア
+        selectCards.Clear();
+        ClickObject.SetActive(false);
     }
 }
