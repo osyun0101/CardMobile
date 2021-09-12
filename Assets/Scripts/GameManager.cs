@@ -86,10 +86,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             cards.RemoveAt(r);
             var SubmitImage = PhotonNetwork.InstantiateRoomObject("SubmitImage", new Vector3(-0, 0, 0), Quaternion.identity);
             SubmitImage.GetComponent<PhotonView>().RPC("SetSubmitImage", RpcTarget.All, SubmitCard);
-
-            //残り枚数を表示する処理
-            var cardsResidue = PhotonNetwork.InstantiateRoomObject("CardsResidue", new Vector3(0, 0, 0), Quaternion.identity);
-            cardsResidue.GetComponent<PhotonView>().RPC("cardSet", RpcTarget.All, cards.Count);
+            SetDeckCount();
         }
     }
 
@@ -97,5 +94,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static void GetAllPlayerHand()
     {
         PlayerHands = GameObject.FindGameObjectsWithTag("Player");
+    }
+
+    public static void SetDeckCount()
+    {
+        //残り枚数を表示する処理
+        var cardsResidue = PhotonNetwork.InstantiateRoomObject("CardsResidue", new Vector3(0, 0, 0), Quaternion.identity);
+        cardsResidue.GetComponent<PhotonView>().RPC("cardSet", RpcTarget.All, cards.Count);
     }
 }

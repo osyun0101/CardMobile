@@ -158,7 +158,13 @@ public class OutPutButton : MonoBehaviour
         SelectHandManager.PlayerHands.Add(cardImage);
 
         SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
+        ClickObject.SetActive(false);
+    }
 
+    //取得したカードを手札に設置する処理
+    public static void SetHandCard()
+    {
+        var selectCards = SelectHandManager.selectCards;
         //SelfHandPanelにある手札を削除
         foreach (var cardobj in selectCards)
         {
@@ -181,6 +187,5 @@ public class OutPutButton : MonoBehaviour
 
         //SelectHandManagerのselectCardsフィールドをクリア
         selectCards.Clear();
-        ClickObject.SetActive(false);
     }
 }
