@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using System;
 
 public class NickName : MonoBehaviourPunCallbacks
 {
@@ -29,16 +30,6 @@ public class NickName : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
-    public void CreateRoomMove()
-    {
-
-    }
-
-    public void SelectRoomMove()
-    {
-
-    }
-
     public override void OnJoinedLobby()
     {
         Debug.Log("ロビー入室完了");
@@ -54,6 +45,7 @@ public class NickName : MonoBehaviourPunCallbacks
         }
         else
         {
+            ErrorText.GetComponent<Text>().text = "ニックネームを入力して下さい";
             ErrorText.SetActive(true);
         }
     }

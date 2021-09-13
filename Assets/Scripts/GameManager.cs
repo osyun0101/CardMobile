@@ -102,4 +102,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         var cardsResidue = PhotonNetwork.InstantiateRoomObject("CardsResidue", new Vector3(0, 0, 0), Quaternion.identity);
         cardsResidue.GetComponent<PhotonView>().RPC("cardSet", RpcTarget.All, cards.Count);
     }
+
+    //次のプレイヤーにターンを移す処理
+    public static void NextTurn(GameObject canvas)
+    {
+        var SubmitImagePanel = canvas.transform.Find("SubmitImage(Clone)").gameObject;
+
+    }
 }

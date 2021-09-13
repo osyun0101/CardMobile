@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CardDeck : MonoBehaviour, IPointerClickHandler
 {
     public GameObject SelfHandPanel;
+    public GameObject Canvas;
 
     public void OnPointerClick(PointerEventData pointerData)
     {
@@ -23,7 +24,7 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         GameManager.SetDeckCount();
 
         SelectHandManager.PlayerHands.Add(cardImage);
-        OutPutButton.SetHandCard();
+        OutPutButton.SetHandCard(Canvas.transform.Find("SubmitImage(Clone)").gameObject);
         this.gameObject.SetActive(false);
     }
 }

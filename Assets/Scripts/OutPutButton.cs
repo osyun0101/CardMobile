@@ -157,12 +157,13 @@ public class OutPutButton : MonoBehaviour
         cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 190);
         SelectHandManager.PlayerHands.Add(cardImage);
 
+        SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
         SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
         ClickObject.SetActive(false);
     }
 
     //取得したカードを手札に設置する処理
-    public static void SetHandCard()
+    public static void SetHandCard(GameObject SubmitImagePanel)
     {
         var selectCards = SelectHandManager.selectCards;
         //SelfHandPanelにある手札を削除
@@ -184,6 +185,13 @@ public class OutPutButton : MonoBehaviour
             newList.Add(hand);
         }
         SelectHandManager.PlayerHands = newList;
+
+        //山札からカードを引いた後、場に出す処理
+        var random = Random.Range(0, selectCards.Count);
+        var selectCard = selectCards[random];
+        SubmitImagePanel.SetActive(true);
+        SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
+        SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
 
         //SelectHandManagerのselectCardsフィールドをクリア
         selectCards.Clear();
