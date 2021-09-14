@@ -107,6 +107,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static void NextTurn(GameObject canvas)
     {
         var SubmitImagePanel = canvas.transform.Find("SubmitImage(Clone)").gameObject;
-
+        var SelectCardText = canvas.transform.Find("SelfHandPanel").transform.Find("SelectCardText");
+        SelectCardText.GetComponent<TextMeshProUGUI>().text = "";
+        var outPutButton = canvas.transform.Find("Button");
+        outPutButton.gameObject.SetActive(false);
     }
 }

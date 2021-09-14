@@ -26,5 +26,7 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         SelectHandManager.PlayerHands.Add(cardImage);
         OutPutButton.SetHandCard(Canvas.transform.Find("SubmitImage(Clone)").gameObject);
         this.gameObject.SetActive(false);
+
+        GameManager.NextTurn(Canvas);
     }
 }

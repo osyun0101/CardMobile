@@ -66,19 +66,37 @@ public class OutPutButton : MonoBehaviour
             SelectCardText.GetComponent<TextMeshProUGUI>().text = "引くカードを選択してください";
 
             //三角形のオブジェクト作成
-            Triangle.GetComponent<Triangle>().CreateTriangle();
-            Triangle2 = Object.Instantiate(Triangle);
-            Triangle2.GetComponent<Triangle>().CreateTriangle();
-            Triangle.transform.SetParent(SubmitImagePanel.transform);
-            Triangle2.transform.SetParent(Image.transform);
-            GetClickPanel.transform.SetParent(SubmitImagePanel.transform); //場のカード上に選択用のパネルを設置
-            GetClickPanel.transform.localPosition = new Vector3(0, 0, 100);
-            GetClickPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(90, SubmitImagePanel.GetComponent<RectTransform>().sizeDelta.y);
-            GetClickPanel.SetActive(true);
-            GetClickPanel2.transform.SetParent(Image.transform); //場のカード上に選択用のパネルを設置
-            GetClickPanel2.transform.localPosition = new Vector3(0, 0, 100);
-            GetClickPanel2.GetComponent<RectTransform>().sizeDelta = new Vector2(90, Image.GetComponent<RectTransform>().sizeDelta.y);
-            GetClickPanel2.SetActive(true);
+            var Triangle_1 = SubmitImagePanel.transform.Find("Triangle");
+            var Triangle_2 = Image.transform.Find("Triangle(Clone)");
+            var clickPanel_1 = SubmitImagePanel.transform.Find("GetClickPanel");
+            var clickPanel_2 = Image.transform.Find("GetClickPanel2");
+
+            if (Triangle_1 == null
+                && Triangle_2 == null
+                && clickPanel_1 == null
+                && clickPanel_2 == null)
+            {
+                Triangle.GetComponent<Triangle>().CreateTriangle();
+                Triangle2 = Object.Instantiate(Triangle);
+                Triangle2.GetComponent<Triangle>().CreateTriangle();
+                Triangle.transform.SetParent(SubmitImagePanel.transform);
+                Triangle2.transform.SetParent(Image.transform);
+                GetClickPanel.transform.SetParent(SubmitImagePanel.transform); //場のカード上に選択用のパネルを設置
+                GetClickPanel.transform.localPosition = new Vector3(0, 0, 100);
+                GetClickPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(90, SubmitImagePanel.GetComponent<RectTransform>().sizeDelta.y);
+                GetClickPanel.SetActive(true);
+                GetClickPanel2.transform.SetParent(Image.transform); //場のカード上に選択用のパネルを設置
+                GetClickPanel2.transform.localPosition = new Vector3(0, 0, 100);
+                GetClickPanel2.GetComponent<RectTransform>().sizeDelta = new Vector2(90, Image.GetComponent<RectTransform>().sizeDelta.y);
+                GetClickPanel2.SetActive(true);
+            }
+            else
+            {
+                Triangle.SetActive(true);
+                Triangle2.SetActive(true);
+                GetClickPanel.SetActive(true);
+                GetClickPanel2.SetActive(true);
+            }
             moveTriangle = true;
         }
         else
@@ -160,12 +178,51 @@ public class OutPutButton : MonoBehaviour
         SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
         SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
         ClickObject.SetActive(false);
+
+        SetSelfHand(selectCards);
+        //SelectHandManagerのselectCardsフィールドをクリア
+        selectCards.Clear();
     }
 
-    //取得したカードを手札に設置する処理
+    //山札から引いた時の処理
     public static void SetHandCard(GameObject SubmitImagePanel)
     {
         var selectCards = SelectHandManager.selectCards;
+        SetSelfHand(selectCards);
+        //SelfHandPanelにある手札を削除
+        /*foreach (var cardobj in selectCards)
+        {
+            Destroy(cardobj.gameObject);
+        }
+        //手札のソート
+        var posx = -250;
+        List<GameObject> newList = new List<GameObject>();
+        foreach (var hand in SelectHandManager.PlayerHands)
+        {
+            if (selectCards.Contains(hand.GetComponent<HandCardScript>()))
+            {
+                continue;
+            }
+            hand.transform.localPosition = new Vector3(posx, 0, 0);
+            posx += 125;
+            newList.Add(hand);
+        }
+        SelectHandManager.PlayerHands = newList;*/
+
+        //山札からカードを引いた後、場に出す処理
+        var random = Random.Range(0, selectCards.Count);
+        var selectCard = selectCards[random];
+        SubmitImagePanel.SetActive(true);
+        SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
+        SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
+
+        //SelectHandManagerのselectCardsフィールドをクリア
+        selectCards.Clear();
+    }
+
+   　//引いてきたカードを手札に設置する処理
+    public static void SetSelfHand(List<HandCardScript> selectCards)
+    {
         //SelfHandPanelにある手札を削除
         foreach (var cardobj in selectCards)
         {
@@ -185,15 +242,5 @@ public class OutPutButton : MonoBehaviour
             newList.Add(hand);
         }
         SelectHandManager.PlayerHands = newList;
-
-        //山札からカードを引いた後、場に出す処理
-        var random = Random.Range(0, selectCards.Count);
-        var selectCard = selectCards[random];
-        SubmitImagePanel.SetActive(true);
-        SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
-        SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
-
-        //SelectHandManagerのselectCardsフィールドをクリア
-        selectCards.Clear();
     }
 }
