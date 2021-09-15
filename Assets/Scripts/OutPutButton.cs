@@ -189,25 +189,6 @@ public class OutPutButton : MonoBehaviour
     {
         var selectCards = SelectHandManager.selectCards;
         SetSelfHand(selectCards);
-        //SelfHandPanelにある手札を削除
-        /*foreach (var cardobj in selectCards)
-        {
-            Destroy(cardobj.gameObject);
-        }
-        //手札のソート
-        var posx = -250;
-        List<GameObject> newList = new List<GameObject>();
-        foreach (var hand in SelectHandManager.PlayerHands)
-        {
-            if (selectCards.Contains(hand.GetComponent<HandCardScript>()))
-            {
-                continue;
-            }
-            hand.transform.localPosition = new Vector3(posx, 0, 0);
-            posx += 125;
-            newList.Add(hand);
-        }
-        SelectHandManager.PlayerHands = newList;*/
 
         //山札からカードを引いた後、場に出す処理
         var random = Random.Range(0, selectCards.Count);
