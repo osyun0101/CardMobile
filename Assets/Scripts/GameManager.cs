@@ -5,6 +5,7 @@ using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -104,12 +105,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     //次のプレイヤーにターンを移す処理
-    public static void NextTurn(GameObject canvas)
+    public static void NextTurn(GameObject canvas, int ActorNumber)
     {
         var SubmitImagePanel = canvas.transform.Find("SubmitImage(Clone)").gameObject;
         var SelectCardText = canvas.transform.Find("SelfHandPanel").transform.Find("SelectCardText");
         SelectCardText.GetComponent<TextMeshProUGUI>().text = "";
         var outPutButton = canvas.transform.Find("Button");
         outPutButton.gameObject.SetActive(false);
+        var YouturnImage = GameObject.Find("Canvas").transform.Find("SelfHandPanel").Find("YouturnImage");
+        var turnText = YouturnImage.Find("TurnText(Clone)");
+        var nextPlayer = PhotonNetwork.PlayerList.Where(x => x.ActorNumber == ActorNumber + 10).FirstOrDefault();
+        Debug.Log(nextPlayer);
+        turnText.GetComponent<TextMeshProUGUI>().text = "";
+        YouturnImage.GetComponent<Image>().color = new Color(0f, 100.0f / 255.0f, 255.0f / 255.0f, 1f);
     }
 }

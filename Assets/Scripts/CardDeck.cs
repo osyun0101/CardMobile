@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -37,6 +38,6 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         clickPanel_1.gameObject.SetActive(false);
         var clickPanel_2 = Image.transform.Find("GetClickPanel2");
         clickPanel_2.gameObject.SetActive(false);
-        GameManager.NextTurn(Canvas);
+        GameManager.NextTurn(Canvas, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 }

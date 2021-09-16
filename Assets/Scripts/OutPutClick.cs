@@ -22,6 +22,6 @@ public class OutPutClick : MonoBehaviour, IPointerClickHandler
         clickPanel_1.gameObject.SetActive(false);
         var clickPanel_2 = Image.transform.Find("GetClickPanel2");
         clickPanel_2.gameObject.SetActive(false);
-        GameManager.NextTurn(Canvas);
+        GameManager.NextTurn(Canvas, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 }
