@@ -114,9 +114,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         outPutButton.gameObject.SetActive(false);
         var YouturnImage = GameObject.Find("Canvas").transform.Find("SelfHandPanel").Find("YouturnImage");
         var turnText = YouturnImage.Find("TurnText(Clone)");
-        var nextPlayer = PhotonNetwork.PlayerList.Where(x => x.ActorNumber == ActorNumber + 10).FirstOrDefault();
-        Debug.Log(nextPlayer);
-        turnText.GetComponent<TextMeshProUGUI>().text = "";
+        var PlayerList = PhotonNetwork.PlayerList;
+        var nextPlayer = PlayerList.Where(x => x.ActorNumber == ActorNumber + 1).FirstOrDefault();
+        if(nextPlayer == null)
+        {
+            nextPlayer = PlayerList[0];
+        }
+        turnText.GetComponent<TextMeshProUGUI>().text = $"{nextPlayer.NickName}の番です";
         YouturnImage.GetComponent<Image>().color = new Color(0f, 100.0f / 255.0f, 255.0f / 255.0f, 1f);
     }
 }
