@@ -6,8 +6,9 @@ using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using ExitGames.Client.Photon;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public static List<string> cards = new List<string>();
     public static GameObject[] PlayerHands = new GameObject[] { };
@@ -18,7 +19,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Debug.Log("PlayRoomに遷移");
-        
         // マスタークライアントの時
         if (PhotonNetwork.LocalPlayer.IsMasterClient)
         {
@@ -120,7 +120,30 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             nextPlayer = PlayerList[0];
         }
-        turnText.GetComponent<TextMeshProUGUI>().text = $"{nextPlayer.NickName}の番です";
+        turnText.GetComponent<PhotonView>().RPC("SetText", RpcTarget.All, nextPlayer.NickName);
+
+        var option = new RaiseEventOptions()
+        {
+            TargetActors = new int[] { nextPlayer.ActorNumber },
+            Receivers = ReceiverGroup.All,
+        };
+        PhotonNetwork.RaiseEvent((byte)EEventType.Turn, "neko", option, SendOptions.SendReliable);
         YouturnImage.GetComponent<Image>().color = new Color(0f, 100.0f / 255.0f, 255.0f / 255.0f, 1f);
+    }
+
+    public enum EEventType : byte
+    {
+        Turn = 1
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if(photonEvent.Code == (byte)EEventType.Turn)
+        {
+            var YouturnImage = Canvas.transform.Find("SelfHandPanel").Find("YouturnImage");
+            var turnText = YouturnImage.Find("TurnText(Clone)");
+            YouturnImage.GetComponent<Image>().color = new Color(226.0f / 255.0f, 85.0f / 255.0f, 80.0f / 255.0f, 1f);
+            turnText.GetComponent<TextMeshProUGUI>().text = "あなたの番です";
+        }
     }
 }

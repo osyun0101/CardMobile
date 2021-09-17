@@ -116,6 +116,11 @@ namespace Photon.Pun
             NetworkingClient.AddCallbackTarget(target);
         }
 
+        public static void RaiseEvent(byte turn, string v1, bool v2, RaiseEventOptions option)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>
         /// Removes the target object from callbacks for its implemented callback-interfaces.
@@ -2492,6 +2497,7 @@ namespace Photon.Pun
 
         // to be used in the main thread. as OnRegionsPinged is called in a separate thread and so we can't use some of the Unity methods (like saving playerPrefs)
         private static RegionHandler _cachedRegionHandler;
+        public static Action<byte, object, int> OnEventCall;
 
         private static void OnRegionsPinged(RegionHandler regionHandler)
         {
