@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
+using static GameManager;
+using ExitGames.Client.Photon;
 
 public class OutPutButton : MonoBehaviour
 {
@@ -167,6 +171,7 @@ public class OutPutButton : MonoBehaviour
         var selectCard = selectCards[random];
         SubmitImagePanel.SetActive(true);
 
+        //手札セット
         var cardImage = Instantiate((GameObject)Resources.Load("CardImage"));
         cardImage.GetComponent<HandCardScript>().cardName = SubmitImagePanel.GetComponent<SubmitImage>().CardName;
         cardImage.GetComponent<RawImage>().texture = SubmitImagePanel.GetComponent<RawImage>().texture;
@@ -175,8 +180,12 @@ public class OutPutButton : MonoBehaviour
         cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 190);
         SelectHandManager.PlayerHands.Add(cardImage);
 
-        SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
-        SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
+        //場にセット
+        var option = new RaiseEventOptions()
+        {
+            Receivers = ReceiverGroup.All,
+        };
+        PhotonNetwork.RaiseEvent((byte)EEventType.cardStage, selectCard.gameObject.GetComponent<HandCardScript>().cardName, option, SendOptions.SendReliable);
         ClickObject.SetActive(false);
 
         SetSelfHand(selectCards);

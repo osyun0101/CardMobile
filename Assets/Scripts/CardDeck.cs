@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static GameManager;
 
 public class CardDeck : MonoBehaviour, IPointerClickHandler
 {
@@ -23,7 +26,14 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         cardImage.transform.SetParent(SelfHandPanel.transform);
         cardImage.transform.localScale = new Vector3(1, 1, 1);
         cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 190);
-        GameManager.SetDeckCount();
+
+        //ゲームマネージャーのカードリストからオブジェクト削除と山札のカウント修正
+        GameManager.cards.RemoveAt(r);
+        var option = new RaiseEventOptions()
+        {
+            Receivers = ReceiverGroup.All,
+        };
+        PhotonNetwork.RaiseEvent((byte)EEventType.cardCount, "neko", option, SendOptions.SendReliable);
 
         SelectHandManager.PlayerHands.Add(cardImage);
         OutPutButton.SetHandCard(Canvas.transform.Find("SubmitImage(Clone)").gameObject);

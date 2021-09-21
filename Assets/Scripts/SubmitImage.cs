@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class SubmitImage : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     public string CardName;
+
     [PunRPC]
     public void SetSubmitImage(string cardName)
     {

@@ -54,13 +54,19 @@ public class InputFieldEvent : MonoBehaviourPunCallbacks
 
             // 部屋を作成して入室する
             var boolRoom = PhotonNetwork.CreateRoom(InputText.text, roomOptions);
-            
             if (boolRoom)
             {
                 this.RoomNameText = InputText.text;
                 DontDestroyOnLoad(this.gameObject);
                 //SceneManager.LoadSceneAsync("RoomPlayerIndex");
                 PhotonNetwork.LoadLevel("RoomPlayerIndex");
+            }
+            else
+            {
+                ErrorText.GetComponent<Text>().text = "部屋の作成に失敗しました。\nネットワーク環境に問題がある可能性があります。";
+                var sizex = ErrorText.GetComponent<RectTransform>().sizeDelta.x;
+                ErrorText.GetComponent<RectTransform>().sizeDelta = new Vector2(sizex, 200.0f);
+                ErrorText.SetActive(true);
             }
         }
         else

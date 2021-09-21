@@ -133,7 +133,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public enum EEventType : byte
     {
-        Turn = 1
+        Turn = 1,
+        cardStage = 2,
+        cardCount = 3
     }
 
     public void OnEvent(EventData photonEvent)
@@ -144,6 +146,23 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var turnText = YouturnImage.Find("TurnText(Clone)");
             YouturnImage.GetComponent<Image>().color = new Color(226.0f / 255.0f, 85.0f / 255.0f, 80.0f / 255.0f, 1f);
             turnText.GetComponent<TextMeshProUGUI>().text = "あなたの番です";
+        }
+        else if(photonEvent.Code == (byte)EEventType.cardStage)
+        {
+            var submitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
+            var cardName = photonEvent.CustomData.ToString();
+            var path = $"Playing_Cards/Image/PlayingCards/{cardName}";
+            var card = Resources.Load<Sprite>(path);
+            submitImagePanel.GetComponent<RawImage>().texture = card.texture;
+            submitImagePanel.GetComponent<SubmitImage>().CardName = cardName;
+        }
+        else if(photonEvent.Code == (byte)EEventType.cardCount)
+        {
+            int num;
+            var cardResidue = Canvas.transform.Find("Image").Find("CardsResidue(Clone)");
+            var cardCount = cardResidue.GetComponent<Text>().text;
+            int.TryParse(cardCount, out num);
+            cardResidue.GetComponent<Text>().text = (num - 1).ToString();
         }
     }
 }
