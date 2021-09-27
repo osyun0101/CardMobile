@@ -85,6 +85,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var r = Random.Range(0, cards.Count);
             var SubmitCard = cards[r];
             cards.RemoveAt(r);
+
+            //全てのプレイヤーで山札を共有する
+            var option = new RaiseEventOptions()
+            {
+                Receivers = ReceiverGroup.All,
+            };
+            PhotonNetwork.RaiseEvent((byte)EEventType.deckSet, cards.ToArray(), option, SendOptions.SendReliable);
+
             var SubmitImage = PhotonNetwork.InstantiateRoomObject("SubmitImage", new Vector3(-0, 0, 0), Quaternion.identity);
             SubmitImage.GetComponent<PhotonView>().RPC("SetSubmitImage", RpcTarget.All, SubmitCard);
             SetDeckCount();
@@ -135,7 +143,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         Turn = 1,
         cardStage = 2,
-        cardCount = 3
+        cardCount = 3,
+        deckSet = 4
     }
 
     public void OnEvent(EventData photonEvent)
@@ -163,6 +172,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var cardCount = cardResidue.GetComponent<Text>().text;
             int.TryParse(cardCount, out num);
             cardResidue.GetComponent<Text>().text = (num - 1).ToString();
+        }
+        else if(photonEvent.Code == (byte)EEventType.deckSet)
+        {
+            var cardsAr = (string[])photonEvent.CustomData;
+            cards = cardsAr.ToList();
         }
     }
 }
