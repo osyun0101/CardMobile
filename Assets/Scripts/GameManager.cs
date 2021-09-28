@@ -139,12 +139,37 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         YouturnImage.GetComponent<Image>().color = new Color(0f, 100.0f / 255.0f, 255.0f / 255.0f, 1f);
     }
 
+    //引いてきたカードを手札に設置する処理
+    public static void SetSelfHand(List<HandCardScript> selectCards)
+    {
+        //SelfHandPanelにある手札を削除
+        foreach (var cardobj in selectCards)
+        {
+            Destroy(cardobj.gameObject);
+        }
+        //手札のソート
+        var posx = -250;
+        List<GameObject> newList = new List<GameObject>();
+        foreach (var hand in SelectHandManager.PlayerHands)
+        {
+            if (selectCards.Contains(hand.GetComponent<HandCardScript>()))
+            {
+                continue;
+            }
+            hand.transform.localPosition = new Vector3(posx, 0, 0);
+            posx += 125;
+            newList.Add(hand);
+        }
+        SelectHandManager.PlayerHands = newList;
+    }
+
     public enum EEventType : byte
     {
         Turn = 1,
         cardStage = 2,
         cardCount = 3,
-        deckSet = 4
+        deckSet = 4,
+        handCardSet = 5
     }
 
     public void OnEvent(EventData photonEvent)
@@ -177,6 +202,25 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             var cardsAr = (string[])photonEvent.CustomData;
             cards = cardsAr.ToList();
+        }
+        else if(photonEvent.Code == (byte)EEventType.handCardSet)
+        {
+            var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
+            var selectCards = SelectHandManager.selectCards;
+            SetSelfHand(selectCards);
+
+            //山札からカードを引いた後、場に出す処理
+            /*var data = photonEvent.CustomData as Dictionary<string, object>;
+
+            int rm;
+            int.TryParse(photonEvent.CustomData.ToString(), out rm);
+            var selectCard = selectCards[rm];
+            SubmitImagePanel.SetActive(true);
+            SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
+            SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
+
+            //SelectHandManagerのselectCardsフィールドをクリア
+            selectCards.Clear();*/
         }
     }
 }

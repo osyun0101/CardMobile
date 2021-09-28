@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Runtime.Serialization;
+
 using static GameManager;
 
 public class CardDeck : MonoBehaviour, IPointerClickHandler
@@ -36,7 +39,12 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         PhotonNetwork.RaiseEvent((byte)EEventType.cardCount, "neko", option, SendOptions.SendReliable);
 
         SelectHandManager.PlayerHands.Add(cardImage);
-        OutPutButton.SetHandCard(Canvas.transform.Find("SubmitImage(Clone)").gameObject);
+
+        var random = Random.Range(0, SelectHandManager.selectCards.Count);
+        var datadic = new Dictionary<string, object>();
+        datadic.Add("cardList", SelectHandManager.selectCards);
+        datadic.Add("random", random);
+        PhotonNetwork.RaiseEvent((byte)EEventType.handCardSet, JsonConvert.SerializeObjectdatadic), option, SendOptions.SendReliable);
         this.gameObject.SetActive(false);
 
         var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").transform;

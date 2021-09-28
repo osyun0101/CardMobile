@@ -188,24 +188,7 @@ public class OutPutButton : MonoBehaviour
         PhotonNetwork.RaiseEvent((byte)EEventType.cardStage, selectCard.gameObject.GetComponent<HandCardScript>().cardName, option, SendOptions.SendReliable);
         ClickObject.SetActive(false);
 
-        SetSelfHand(selectCards);
-        //SelectHandManagerのselectCardsフィールドをクリア
-        selectCards.Clear();
-    }
-
-    //山札から引いた時の処理
-    public static void SetHandCard(GameObject SubmitImagePanel)
-    {
-        var selectCards = SelectHandManager.selectCards;
-        SetSelfHand(selectCards);
-
-        //山札からカードを引いた後、場に出す処理
-        var random = Random.Range(0, selectCards.Count);
-        var selectCard = selectCards[random];
-        SubmitImagePanel.SetActive(true);
-        SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
-        SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
-
+        GameManager.SetSelfHand(selectCards);
         //SelectHandManagerのselectCardsフィールドをクリア
         selectCards.Clear();
     }
