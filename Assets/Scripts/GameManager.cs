@@ -205,12 +205,12 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         else if(photonEvent.Code == (byte)EEventType.handCardSet)
         {
-            var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
+            /*var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
             var selectCards = SelectHandManager.selectCards;
             SetSelfHand(selectCards);
 
             //山札からカードを引いた後、場に出す処理
-            /*var data = photonEvent.CustomData as Dictionary<string, object>;
+            var data = photonEvent.CustomData as Dictionary<string, object>;
 
             int rm;
             int.TryParse(photonEvent.CustomData.ToString(), out rm);

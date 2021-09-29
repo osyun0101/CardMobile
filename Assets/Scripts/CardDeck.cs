@@ -7,7 +7,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 using static GameManager;
 
@@ -44,7 +44,7 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         var datadic = new Dictionary<string, object>();
         datadic.Add("cardList", SelectHandManager.selectCards);
         datadic.Add("random", random);
-        PhotonNetwork.RaiseEvent((byte)EEventType.handCardSet, JsonConvert.SerializeObjectdatadic), option, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)EEventType.handCardSet, datadic, option, SendOptions.SendReliable);
         this.gameObject.SetActive(false);
 
         var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").transform;
