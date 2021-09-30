@@ -41,9 +41,7 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
 
         var random = Random.Range(0, selectCards.Count);
         var setCard = selectCards[random];
-        var datadic = new Dictionary<string, object>();
-        datadic.Add("cardName",setCard.gameObject.GetComponent<HandCardScript>().cardName);
-        PhotonNetwork.RaiseEvent((byte)EEventType.handCardSet, datadic, option, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)EEventType.cardStage, setCard.gameObject.GetComponent<HandCardScript>().cardName, option, SendOptions.SendReliable);
         this.gameObject.SetActive(false);
 
         //プレイヤーの手札に山札から引いたカードを追加

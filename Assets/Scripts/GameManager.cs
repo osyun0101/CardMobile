@@ -168,8 +168,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         Turn = 1,
         cardStage = 2,
         cardCount = 3,
-        deckSet = 4,
-        handCardSet = 5
+        deckSet = 4
     }
 
     public void OnEvent(EventData photonEvent)
@@ -192,6 +191,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var cardName = photonEvent.CustomData.ToString();
             var path = $"Playing_Cards/Image/PlayingCards/{cardName}";
             var card = Resources.Load<Sprite>(path);
+            //山札からカードを引いた後、場に出す処理
+            submitImagePanel.SetActive(true);
             submitImagePanel.GetComponent<RawImage>().texture = card.texture;
             submitImagePanel.GetComponent<SubmitImage>().CardName = cardName;
         }
@@ -208,7 +209,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var cardsAr = (string[])photonEvent.CustomData;
             cards = cardsAr.ToList();
         }
-        else if(photonEvent.Code == (byte)EEventType.handCardSet)
+       　/*else if(photonEvent.Code == (byte)EEventType.handCardSet)
         {
             var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
             var selectCard = (photonEvent.CustomData as Dictionary<string, object>)["cardName"].ToString();
@@ -219,6 +220,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var path = $"Playing_Cards/Image/PlayingCards/{selectCard}";
             var cardImage = Resources.Load<Sprite>(path);
             SubmitImagePanel.GetComponent<RawImage>().texture = cardImage.texture;
-        }
+        }*/
     }
 }
