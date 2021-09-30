@@ -29,6 +29,7 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         cardImage.transform.SetParent(SelfHandPanel.transform);
         cardImage.transform.localScale = new Vector3(1, 1, 1);
         cardImage.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 190);
+        var selectCards = SelectHandManager.selectCards;
 
         //ゲームマネージャーのカードリストからオブジェクト削除と山札のカウント修正
         GameManager.cards.RemoveAt(r);
@@ -38,14 +39,19 @@ public class CardDeck : MonoBehaviour, IPointerClickHandler
         };
         PhotonNetwork.RaiseEvent((byte)EEventType.cardCount, "neko", option, SendOptions.SendReliable);
 
-        SelectHandManager.PlayerHands.Add(cardImage);
-
-        var random = Random.Range(0, SelectHandManager.selectCards.Count);
+        var random = Random.Range(0, selectCards.Count);
+        var setCard = selectCards[random];
         var datadic = new Dictionary<string, object>();
-        datadic.Add("cardList", SelectHandManager.selectCards);
-        datadic.Add("random", random);
+        datadic.Add("cardName",setCard.gameObject.GetComponent<HandCardScript>().cardName);
         PhotonNetwork.RaiseEvent((byte)EEventType.handCardSet, datadic, option, SendOptions.SendReliable);
         this.gameObject.SetActive(false);
+
+        //プレイヤーの手札に山札から引いたカードを追加
+        SelectHandManager.PlayerHands.Add(cardImage);
+        //選択されたカードを削除し、新しい手札に整形
+        SetSelfHand(SelectHandManager.selectCards);
+        //SelectHandManagerのselectCardsフィールドをクリア
+        selectCards.Clear();
 
         var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").transform;
         var Triangle_1 = SubmitImagePanel.Find("Triangle");

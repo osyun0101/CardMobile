@@ -180,6 +180,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var turnText = YouturnImage.Find("TurnText(Clone)");
             YouturnImage.GetComponent<Image>().color = new Color(226.0f / 255.0f, 85.0f / 255.0f, 80.0f / 255.0f, 1f);
             turnText.GetComponent<TextMeshProUGUI>().text = "あなたの番です";
+            var buttom = Canvas.transform.Find("Button");
+            buttom.gameObject.SetActive(true);
+            var selectCardText = Canvas.transform.Find("SelfHandPanel").Find("SelectCardText");
+            selectCardText.GetComponent<TextMeshProUGUI>().text = "捨てるカードを選択してください";
+            selectCardText.gameObject.SetActive(true);
         }
         else if(photonEvent.Code == (byte)EEventType.cardStage)
         {
@@ -205,22 +210,15 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         else if(photonEvent.Code == (byte)EEventType.handCardSet)
         {
-            /*var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
-            var selectCards = SelectHandManager.selectCards;
-            SetSelfHand(selectCards);
+            var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
+            var selectCard = (photonEvent.CustomData as Dictionary<string, object>)["cardName"].ToString();
 
             //山札からカードを引いた後、場に出す処理
-            var data = photonEvent.CustomData as Dictionary<string, object>;
-
-            int rm;
-            int.TryParse(photonEvent.CustomData.ToString(), out rm);
-            var selectCard = selectCards[rm];
             SubmitImagePanel.SetActive(true);
-            SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard.gameObject.GetComponent<HandCardScript>().cardName;
-            SubmitImagePanel.GetComponent<RawImage>().texture = selectCard.gameObject.GetComponent<RawImage>().texture;
-
-            //SelectHandManagerのselectCardsフィールドをクリア
-            selectCards.Clear();*/
+            SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard;
+            var path = $"Playing_Cards/Image/PlayingCards/{selectCard}";
+            var cardImage = Resources.Load<Sprite>(path);
+            SubmitImagePanel.GetComponent<RawImage>().texture = cardImage.texture;
         }
     }
 }
