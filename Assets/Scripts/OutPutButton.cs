@@ -17,7 +17,7 @@ public class OutPutButton : MonoBehaviour
     public TextMeshProUGUI ErrorText;
     public GameObject Triangle;
     public GameObject Image;
-    GameObject Triangle2;
+    public GameObject Triangle2;
     public GameObject GetClickPanel;
     public GameObject GetClickPanel2;
     public bool isFadeOut = false;
@@ -25,21 +25,11 @@ public class OutPutButton : MonoBehaviour
     float Panelred, Panelgreen, Panelblue, Panelalfa;
     float Textred, Textgreen, Textblue, Textalfa;
 
-    //Triangle系
-    bool moveTriangle = false;
-    float TriangleY = 70;
-    bool over = false; //100を超えてる時true
-
     void Update()
     {
         if (isFadeOut)
         {
             StartFadeOut();
-        }
-
-        if (moveTriangle)
-        {
-            MoveTriangle();
         }
     }
 
@@ -81,10 +71,11 @@ public class OutPutButton : MonoBehaviour
                 && clickPanel_2 == null)
             {
                 Triangle.GetComponent<Triangle>().CreateTriangle();
-                Triangle2 = Object.Instantiate(Triangle);
                 Triangle2.GetComponent<Triangle>().CreateTriangle();
                 Triangle.transform.SetParent(SubmitImagePanel.transform);
                 Triangle2.transform.SetParent(Image.transform);
+                Triangle.transform.localPosition = new Vector3(0, 70, 100);
+                Triangle2.transform.localPosition = new Vector3(0, 70, 100);
                 GetClickPanel.transform.SetParent(SubmitImagePanel.transform); //場のカード上に選択用のパネルを設置
                 GetClickPanel.transform.localPosition = new Vector3(0, 0, 100);
                 GetClickPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(90, SubmitImagePanel.GetComponent<RectTransform>().sizeDelta.y);
@@ -101,7 +92,6 @@ public class OutPutButton : MonoBehaviour
                 GetClickPanel.SetActive(true);
                 GetClickPanel2.SetActive(true);
             }
-            moveTriangle = true;
         }
         else
         {
@@ -137,29 +127,6 @@ public class OutPutButton : MonoBehaviour
     {
         await Task.Delay(2000);
         isFadeOut = true;
-    }
-
-    //上下に三角形のオブジェクトを動かすメソッド
-    void MoveTriangle()
-    {
-        if(over)
-        {
-            TriangleY -= 0.5f;
-            if(TriangleY <= 70)
-            {
-                over = false;
-            }
-        }
-        else
-        {
-            TriangleY += 0.5f;
-            if(TriangleY >= 100)
-            {
-                over = true;
-            }
-        }
-        Triangle.transform.localPosition = new Vector3(0, TriangleY, 100);
-        Triangle2.transform.localPosition = new Vector3(0, TriangleY, 100);
     }
 
     //場に捨てるカードを設置する処理

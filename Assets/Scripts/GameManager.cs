@@ -209,17 +209,5 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var cardsAr = (string[])photonEvent.CustomData;
             cards = cardsAr.ToList();
         }
-       　/*else if(photonEvent.Code == (byte)EEventType.handCardSet)
-        {
-            var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
-            var selectCard = (photonEvent.CustomData as Dictionary<string, object>)["cardName"].ToString();
-
-            //山札からカードを引いた後、場に出す処理
-            SubmitImagePanel.SetActive(true);
-            SubmitImagePanel.GetComponent<SubmitImage>().CardName = selectCard;
-            var path = $"Playing_Cards/Image/PlayingCards/{selectCard}";
-            var cardImage = Resources.Load<Sprite>(path);
-            SubmitImagePanel.GetComponent<RawImage>().texture = cardImage.texture;
-        }*/
     }
 }
