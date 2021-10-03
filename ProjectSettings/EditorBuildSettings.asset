@@ -66,4 +66,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PlayRoom.unity
     guid: 5433a8e774e20472995d84c9e6ed8506
+  - enabled: 1
+    path: Assets/Scenes/TekashiNext.unity
+    guid: 777dc3d685c624c2b9dce39f01f6783f
   m_configObjects: {}
