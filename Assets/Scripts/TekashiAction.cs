@@ -9,7 +9,10 @@ public class TekashiAction : MonoBehaviour
     public GameObject TekashiPlayerHandsObj;
     public void Tekashi()
     {
-        TekashiPlayerHandsObj.GetComponent<TekashiPlayerHands>().PlayerHands = GameManager.PlayerHands;
+        foreach(var hand in SelectHandManager.PlayerHands)
+        {
+            TekashiPlayerHandsObj.GetComponent<TekashiPlayerHands>().PlayerHands.Add(hand.GetComponent<HandCardScript>().cardName);
+        }
         // シーン切り替え
         PhotonNetwork.LoadLevel("TekashiNext");
     }

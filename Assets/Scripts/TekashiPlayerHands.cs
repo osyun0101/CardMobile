@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TekashiPlayerHands : MonoBehaviour
 {
-    public GameObject[] PlayerHands;
+    public List<string> PlayerHands = new List<string>();
 
     private void Awake()
     {

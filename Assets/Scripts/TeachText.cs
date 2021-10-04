@@ -7,6 +7,6 @@ public class TeachText : MonoBehaviour
     private void Awake()
     {
         Debug.Log("-----------");
-        Debug.Log(GameManager.PlayerHands[0]);
+        Debug.Log(GameObject.Find("TekashiPlayerHands").GetComponent<TekashiPlayerHands>().PlayerHands[0]);
     }
 }
