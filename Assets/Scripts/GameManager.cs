@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public static int PlayerActorNumber = 0;
     public GameObject Canvas;
     string mark;
+    public GameObject TekashiAlertPanel;
 
     private void Awake()
     {
@@ -115,7 +116,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     //次のプレイヤーにターンを移す処理
     public static void NextTurn(GameObject canvas, int ActorNumber)
     {
-        var SubmitImagePanel = canvas.transform.Find("SubmitImage(Clone)").gameObject;
         var SelectCardText = canvas.transform.Find("SelfHandPanel").transform.Find("SelectCardText");
         SelectCardText.GetComponent<TextMeshProUGUI>().text = "";
         var outPutButton = canvas.transform.Find("Button");
@@ -168,7 +168,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         Turn = 1,
         cardStage = 2,
         cardCount = 3,
-        deckSet = 4
+        deckSet = 4,
+        tekashiFadeIn = 5
     }
 
     public void OnEvent(EventData photonEvent)
@@ -208,6 +209,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             var cardsAr = (string[])photonEvent.CustomData;
             cards = cardsAr.ToList();
+        }
+        else if(photonEvent.Code == (byte)EEventType.tekashiFadeIn)
+        {
+            var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
+            //Animationを実行する
+            var anim = TekashiAlertPanel.GetComponent<Animator>();
+            anim.SetBool("FadeIn", true);
+            SubmitImagePanel.SetActive(false);
         }
     }
 }
