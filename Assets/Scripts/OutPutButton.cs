@@ -24,6 +24,7 @@ public class OutPutButton : MonoBehaviour
     float speed = 0.001f;
     float Panelred, Panelgreen, Panelblue, Panelalfa;
     float Textred, Textgreen, Textblue, Textalfa;
+    public GameObject TekashiButtom;
 
     void Update()
     {
@@ -92,6 +93,7 @@ public class OutPutButton : MonoBehaviour
                 GetClickPanel.SetActive(true);
                 GetClickPanel2.SetActive(true);
             }
+            TekashiButtom.SetActive(false);
         }
         else
         {

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject Canvas;
     string mark;
     public GameObject TekashiAlertPanel;
+    public GameObject TekashiButtom;
 
     private void Awake()
     {
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         // マスタークライアントの時
         if (PhotonNetwork.LocalPlayer.IsMasterClient)
         {
+            //TekashiButtomアクティブ
+            TekashiButtom.SetActive(true);
             //誰のターンか示すテキスト
             var parent = GameObject.Find("Canvas").transform.Find("SelfHandPanel").Find("YouturnImage");
             var turnText = PhotonNetwork.InstantiateRoomObject("TurnText", new Vector3(0, 0, 0), Quaternion.identity);
