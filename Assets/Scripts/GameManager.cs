@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 HandsSetobj.GetComponent<PhotonView>().RPC("SetHand", RpcTarget.All, player.ActorNumber, dataList.ToArray());
                 var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHandPanel", new Vector3(0, 0, 0), Quaternion.identity);
+                playerPanel.name = "PlayerHandPanel" + player.ActorNumber.ToString();
                 playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber, PlayerList.Length);
             }
 
@@ -139,6 +140,12 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             Receivers = ReceiverGroup.All,
         };
         PhotonNetwork.RaiseEvent((byte)EEventType.Turn, "neko", option, SendOptions.SendReliable);
+        var handsCountOption = new RaiseEventOptions()
+        {
+            Receivers = ReceiverGroup.All,
+        };
+        var actorAndHandCount = new int[] { ActorNumber, SelectHandManager.PlayerHands.Count };
+        PhotonNetwork.RaiseEvent((byte)EEventType.handsCount, actorAndHandCount, handsCountOption, SendOptions.SendReliable);
         YouturnImage.GetComponent<Image>().color = new Color(0f, 100.0f / 255.0f, 255.0f / 255.0f, 1f);
     }
 
@@ -172,7 +179,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         cardStage = 2,
         cardCount = 3,
         deckSet = 4,
-        tekashiFadeIn = 5
+        tekashiFadeIn = 5,
+        handsCount = 6
     }
 
     public void OnEvent(EventData photonEvent)
@@ -188,6 +196,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var selectCardText = Canvas.transform.Find("SelfHandPanel").Find("SelectCardText");
             selectCardText.GetComponent<TextMeshProUGUI>().text = "捨てるカードを選択してください";
             selectCardText.gameObject.SetActive(true);
+            TekashiButtom.SetActive(true);
         }
         else if(photonEvent.Code == (byte)EEventType.cardStage)
         {
@@ -220,6 +229,15 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var anim = TekashiAlertPanel.GetComponent<Animator>();
             anim.SetBool("FadeIn", true);
             SubmitImagePanel.SetActive(false);
+        }
+        else if(photonEvent.Code == (byte)EEventType.handsCount)
+        {
+            var CustomData = (int[])photonEvent.CustomData;
+            var PlayerHandPanel = Canvas.transform.Find("PlayerHandPanel" + CustomData[0]);
+            if(PlayerHandPanel != null)
+            {
+                PlayerHandPanel.Find("PlayerHand").GetComponent<TextMeshProUGUI>().text = CustomData[1].ToString();
+            }
         }
     }
 }
