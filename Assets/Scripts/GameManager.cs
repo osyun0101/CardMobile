@@ -238,6 +238,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 PlayerHandPanel.Find("PlayerHand").GetComponent<TextMeshProUGUI>().text = CustomData[1].ToString();
             }
+            else
+            {
+                Debug.Log("nulnul");
+            }
         }
     }
 }
