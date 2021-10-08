@@ -82,7 +82,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 HandsSetobj.GetComponent<PhotonView>().RPC("SetHand", RpcTarget.All, player.ActorNumber, dataList.ToArray());
                 var playerPanel = PhotonNetwork.InstantiateRoomObject("PlayerHandPanel", new Vector3(0, 0, 0), Quaternion.identity);
-                playerPanel.name = "PlayerHandPanel" + player.ActorNumber.ToString();
                 playerPanel.GetComponent<PhotonView>().RPC("SetPlayerModel", RpcTarget.All, dataList.ToArray(), player.ActorNumber, PlayerList.Length);
             }
 
@@ -237,10 +236,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             if(PlayerHandPanel != null)
             {
                 PlayerHandPanel.Find("PlayerHand").GetComponent<TextMeshProUGUI>().text = CustomData[1].ToString();
-            }
-            else
-            {
-                Debug.Log("nulnul");
             }
         }
     }
