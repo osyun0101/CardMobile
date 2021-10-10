@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     string mark;
     public GameObject TekashiAlertPanel;
     public GameObject TekashiButtom;
+    public static bool CanselPhase = false;
 
     private void Awake()
     {
@@ -119,10 +120,15 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     //次のプレイヤーにターンを移す処理
     public static void NextTurn(GameObject canvas, int ActorNumber)
     {
+        //キャンセルフェーズを終了したステータスに戻す
+        CanselPhase = false;
+
         var SelectCardText = canvas.transform.Find("SelfHandPanel").transform.Find("SelectCardText");
         SelectCardText.GetComponent<TextMeshProUGUI>().text = "";
         var outPutButton = canvas.transform.Find("Button");
         outPutButton.gameObject.SetActive(false);
+        var canselButton = canvas.transform.Find("CanselButton");
+        canselButton.gameObject.SetActive(false);
         var YouturnImage = GameObject.Find("Canvas").transform.Find("SelfHandPanel").Find("YouturnImage");
         var turnText = YouturnImage.Find("TurnText(Clone)");
         var PlayerList = PhotonNetwork.PlayerList;

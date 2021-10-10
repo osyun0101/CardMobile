@@ -25,6 +25,7 @@ public class OutPutButton : MonoBehaviour
     float Panelred, Panelgreen, Panelblue, Panelalfa;
     float Textred, Textgreen, Textblue, Textalfa;
     public GameObject TekashiButtom;
+    public GameObject CanselButton;
 
     void Update()
     {
@@ -93,7 +94,11 @@ public class OutPutButton : MonoBehaviour
                 GetClickPanel.SetActive(true);
                 GetClickPanel2.SetActive(true);
             }
+            ErrorPanel.SetActive(false);
             TekashiButtom.SetActive(false);
+            this.gameObject.SetActive(false);
+            CanselButton.SetActive(true);
+            CanselPhase = true;
         }
         else
         {
@@ -111,6 +116,26 @@ public class OutPutButton : MonoBehaviour
             Textalfa = ErrorText.GetComponent<TextMeshProUGUI>().color.a;
             Delay();
         }
+    }
+
+    public void CanselAction()
+    {
+        CanselButton.SetActive(false);
+        Triangle.SetActive(false);
+        Triangle2.SetActive(false);
+        GetClickPanel.SetActive(false);
+        GetClickPanel2.SetActive(false);
+        TekashiButtom.SetActive(true);
+        SelectHandManager.selectCards.Clear();
+        var posx = -250;
+        foreach (var hand in SelectHandManager.PlayerHands)
+        {
+            hand.transform.localPosition = new Vector3(posx, 0, 0);
+            hand.GetComponent<Outline>().effectColor = new Color(0f, 0f, 0f, 0f);
+            hand.GetComponent<Outline>().effectDistance = new Vector2(1f, 1f);
+            posx += 125;
+        }
+        CanselPhase = false;
     }
 
     void StartFadeOut()
