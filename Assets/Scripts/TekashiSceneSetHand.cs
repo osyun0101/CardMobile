@@ -34,5 +34,6 @@ public class TekashiSceneSetHand : MonoBehaviour
             posx += 125;
         }
         CountText.GetComponent<TextMeshProUGUI>().text = cardCount.ToString();
+        ReleaseAction.countNum = cardCount;
     }
 }
