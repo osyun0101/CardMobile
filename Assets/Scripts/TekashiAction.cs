@@ -10,24 +10,17 @@ using static GameManager;
 
 public class TekashiAction : MonoBehaviour
 {
-    public GameObject TekashiPlayerHandsObj;
     public GameObject OutPutButtom;
 
     public void Tekashi()
     {
         OutPutButtom.SetActive(false);
-        foreach(var hand in SelectHandManager.PlayerHands)
-        {
-            TekashiPlayerHandsObj.GetComponent<TekashiPlayerHands>().PlayerHands.Add(hand.GetComponent<HandCardScript>().cardName);
-        }
-
-
         var option = new RaiseEventOptions()
         {
             Receivers = ReceiverGroup.All,
         };
         //TekashiAlertのAnimationを実行する
-        PhotonNetwork.RaiseEvent((byte)EEventType.tekashiFadeIn, "neko", option, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)EEventType.tekashiAction, "neko", option, SendOptions.SendReliable);
 
         Delay();
     }

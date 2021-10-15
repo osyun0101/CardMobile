@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject TekashiAlertPanel;
     public GameObject TekashiButtom;
     public static bool CanselPhase = false;
+    public GameObject TekashiPlayerHandsObj;
 
     private void Awake()
     {
@@ -184,7 +185,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         cardStage = 2,
         cardCount = 3,
         deckSet = 4,
-        tekashiFadeIn = 5,
+        tekashiAction = 5,
         handsCount = 6
     }
 
@@ -227,8 +228,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var cardsAr = (string[])photonEvent.CustomData;
             cards = cardsAr.ToList();
         }
-        else if(photonEvent.Code == (byte)EEventType.tekashiFadeIn)
+        else if(photonEvent.Code == (byte)EEventType.tekashiAction)
         {
+            foreach (var hand in SelectHandManager.PlayerHands)
+            {
+                TekashiPlayerHandsObj.GetComponent<TekashiPlayerHands>().PlayerHands.Add(hand.GetComponent<HandCardScript>().cardName);
+            }
+
+            //TekashiロゴFadeIn
             var SubmitImagePanel = Canvas.transform.Find("SubmitImage(Clone)").gameObject;
             //Animationを実行する
             var anim = TekashiAlertPanel.GetComponent<Animator>();
