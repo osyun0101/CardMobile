@@ -20,15 +20,6 @@ public class TekashiAction : MonoBehaviour
             Receivers = ReceiverGroup.All,
         };
         //TekashiAlertのAnimationを実行する
-        PhotonNetwork.RaiseEvent((byte)EEventType.tekashiAction, "neko", option, SendOptions.SendReliable);
-
-        Delay();
-    }
-
-    private async void Delay()
-    {
-        await Task.Delay(3000);
-        // シーン切り替え
-        PhotonNetwork.LoadLevel("TekashiNext");
+        PhotonNetwork.RaiseEvent((byte)EEventType.tekashiAction, PhotonNetwork.LocalPlayer.ActorNumber, option, SendOptions.SendReliable);
     }
 }

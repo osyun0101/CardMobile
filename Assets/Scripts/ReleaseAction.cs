@@ -13,7 +13,8 @@ public class ReleaseAction : MonoBehaviour
     public GameObject CountText;
     public void Release()
     {
-        var index = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+        var localPlayer = PhotonNetwork.LocalPlayer;
+        var index = localPlayer.ActorNumber - 1;
         int.TryParse(CountText.GetComponent<TextMeshProUGUI>().text, out int count);
         var dic = new Dictionary<string, int>();
         dic.Add("index", index);

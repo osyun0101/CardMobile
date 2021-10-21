@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using ExitGames.Client.Photon;
+using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -241,6 +243,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             var anim = TekashiAlertPanel.GetComponent<Animator>();
             anim.SetBool("FadeIn", true);
             SubmitImagePanel.SetActive(false);
+            int.TryParse(photonEvent.CustomData.ToString(), out int actorNumber);
+            TekashiNextManager.TekashiPlayerId = actorNumber;
+
+            Delay();
         }
         else if(photonEvent.Code == (byte)EEventType.handsCount)
         {
@@ -251,5 +257,13 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 PlayerHandPanel.Find("PlayerHand").GetComponent<TextMeshProUGUI>().text = CustomData[1].ToString();
             }
         }
+    }
+
+    private async void Delay()
+    {
+        await Task.Delay(3000);
+        // シーン切り替え
+        //PhotonNetwork.LoadLevel("TekashiNext");
+        SceneManager.LoadScene("TekashiNext");
     }
 }
