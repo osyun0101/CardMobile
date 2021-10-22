@@ -6,6 +6,7 @@ using TMPro;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using System.Linq;
+using System.Threading.Tasks;
 
 public class TekashiNextManager : MonoBehaviour, IOnEventCallback
 {
@@ -14,6 +15,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
     public static GameObject ScrollView;
     public static int TekashiPlayerId;
     public static List<Dictionary<string, object>> ReleaseList = new List<Dictionary<string, object>>();
+    public GameObject ModalPanel;
     private void Awake()
     {
         var tkPlayerText = TekashiPlayerName.GetComponent<TextMeshProUGUI>().text;
@@ -76,11 +78,18 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
             listDic.Add("name", tekashiPlayerName);
             listDic.Add("count", dic["count"]);
             ReleaseList.Add(listDic);
-            foreach(var k in ReleaseList)
+            if(ReleaseList.Count == PhotonNetwork.PlayerList.Length)
             {
-                Debug.Log(k["name"]);
-                Debug.Log(k["count"]);
+                Delay();
             }
         }
+    }
+
+    private async void Delay()
+    {
+        await Task.Delay(3000);
+        ModalPanel.SetActive(true);
+        var anim = ModalPanel.GetComponent<Animator>();
+        anim.SetBool("ModalOpen", true);
     }
 }
