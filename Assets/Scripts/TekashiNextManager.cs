@@ -16,6 +16,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
     public static int TekashiPlayerId;
     public static List<Dictionary<string, object>> ReleaseList = new List<Dictionary<string, object>>();
     public GameObject ModalPanel;
+    public GameObject ModalBackPanel;
     private void Awake()
     {
         var tkPlayerText = TekashiPlayerName.GetComponent<TextMeshProUGUI>().text;
@@ -89,6 +90,11 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
     {
         await Task.Delay(3000);
         ModalPanel.SetActive(true);
+        ModalBackPanel.SetActive(true);
+
+        var width = Screen.width * 0.75f;
+        var height = Screen.height * 0.75f;
+        ModalBackPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
         var anim = ModalPanel.GetComponent<Animator>();
         anim.SetBool("ModalOpen", true);
     }
