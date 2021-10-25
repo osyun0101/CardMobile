@@ -21,6 +21,8 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
     public GameObject DeltaTitle;
     public GameObject LoserPlayerPanel;
     public GameObject DeltaCountPanel;
+    public GameObject LoserPlayerName;
+    public GameObject DeltaText;
     private void Awake()
     {
         var tkPlayerText = TekashiPlayerName.GetComponent<TextMeshProUGUI>().text;
@@ -99,6 +101,26 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         DeltaTitle.SetActive(true);
         DeltaCountPanel.SetActive(true);
         LoserPlayerPanel.SetActive(true);
+        //Countが最も大きいプレイヤーの情報を取得
+        int max = 0;
+        var maxPlayerIndex = new List<int>();
+        for(var i = 0; i <  ReleaseList.Count; i++)
+        {
+            int.TryParse(ReleaseList[i]["count"].ToString(), out int count);
+            if(max == count)
+            {
+                maxPlayerIndex.Add(i);
+                continue;
+            }
+            if (max < count)
+            {
+                max = count;
+                maxPlayerIndex.Clear();
+                maxPlayerIndex.Add(i);
+            }
+        }
+        
+        //LoserPlayerName.GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => x["count"]  )
 
         var width = Screen.width * 0.75f;
         var height = Screen.height * 0.75f;
