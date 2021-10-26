@@ -18,11 +18,6 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
     public GameObject ModalPanel;
     public GameObject ModalBackPanel;
     public GameObject LoserTitle;
-    public GameObject DeltaTitle;
-    public GameObject LoserPlayerPanel;
-    public GameObject DeltaCountPanel;
-    public GameObject LoserPlayerName;
-    public GameObject DeltaText;
     private void Awake()
     {
         var tkPlayerText = TekashiPlayerName.GetComponent<TextMeshProUGUI>().text;
@@ -84,6 +79,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
             var tekashiPlayerName = PhotonNetwork.PlayerList[dic["index"]].NickName;
             listDic.Add("name", tekashiPlayerName);
             listDic.Add("count", dic["count"]);
+            listDic.Add("playerId", dic["index"] - 1);
             ReleaseList.Add(listDic);
             if(ReleaseList.Count == PhotonNetwork.PlayerList.Length)
             {
@@ -98,9 +94,6 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         ModalPanel.SetActive(true);
         ModalBackPanel.SetActive(true);
         LoserTitle.SetActive(true);
-        DeltaTitle.SetActive(true);
-        DeltaCountPanel.SetActive(true);
-        LoserPlayerPanel.SetActive(true);
         //Countが最も大きいプレイヤーの情報を取得
         int max = 0;
         var maxPlayerIndex = new List<int>();
@@ -119,7 +112,19 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
                 maxPlayerIndex.Add(i);
             }
         }
-        
+
+        foreach (var index in maxPlayerIndex)
+        {
+            var obj = (GameObject)Resources.Load("LoserPlayerPanel");
+            // プレハブを元にオブジェクトを生成する
+            GameObject instance = Instantiate(obj, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+            instance.transform.SetParent(ModalBackPanel.transform);
+            instance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            instance.transform.localPosition = new Vector3(0, 130f, 0);
+            instance.SetActive(true);
+
+        }
+
         //LoserPlayerName.GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => x["count"]  )
 
         var width = Screen.width * 0.75f;

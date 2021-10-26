@@ -7,6 +7,7 @@ TagManager:
   - Card
   - Bullet
   - CountPanel
+  - LoserPanel
   layers:
   - Default
   - TransparentFX
