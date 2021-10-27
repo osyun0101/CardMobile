@@ -112,7 +112,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
                 maxPlayerIndex.Add(i);
             }
         }
-
+        var instanceList = new List<Animator>();
         foreach (var index in maxPlayerIndex)
         {
             var obj = (GameObject)Resources.Load("LoserPlayerPanel");
@@ -122,7 +122,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
             instance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             instance.transform.localPosition = new Vector3(0, 130f, 0);
             instance.SetActive(true);
-
+            instanceList.Add(instance.GetComponent<Animator>());
         }
 
         //LoserPlayerName.GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => x["count"]  )
@@ -132,5 +132,9 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         ModalBackPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
         var anim = ModalPanel.GetComponent<Animator>();
         anim.SetBool("ModalOpen", true);
+        foreach(var animator in instanceList)
+        {
+            animator.SetBool("LoserPanelOpen", true);
+        }
     }
 }
