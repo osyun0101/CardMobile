@@ -79,8 +79,9 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
             var tekashiPlayerName = PhotonNetwork.PlayerList[dic["index"]].NickName;
             listDic.Add("name", tekashiPlayerName);
             listDic.Add("count", dic["count"]);
-            listDic.Add("playerId", dic["index"] - 1);
+            listDic.Add("playerId", dic["index"] + 1);
             ReleaseList.Add(listDic);
+            Debug.Log(ReleaseList.Count);
             if(ReleaseList.Count == PhotonNetwork.PlayerList.Length)
             {
                 Delay();
@@ -96,36 +97,74 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         LoserTitle.SetActive(true);
         //Countが最も大きいプレイヤーの情報を取得
         int max = 0;
-        var maxPlayerIndex = new List<int>();
-        for(var i = 0; i <  ReleaseList.Count; i++)
+        int min = 100;
+        var maxPlayerId = new List<int>();
+        foreach(var dic in ReleaseList)
         {
-            int.TryParse(ReleaseList[i]["count"].ToString(), out int count);
+            int.TryParse(dic["count"].ToString(), out int count);
             if(max == count)
             {
-                maxPlayerIndex.Add(i);
+                maxPlayerId.Add((int)dic["playerId"]);
                 continue;
             }
             if (max < count)
             {
                 max = count;
-                maxPlayerIndex.Clear();
-                maxPlayerIndex.Add(i);
+                maxPlayerId.Clear();
+                maxPlayerId.Add((int)dic["playerId"]);
+            }
+            if(min > count)
+            {
+                min = count;
             }
         }
+
+        //テカシしたプレイヤーよりカウントが低いプレイヤーがいた時、テカシしたプレイヤーを負けにする
+        var tekashiCount = (int)ReleaseList.Where(x => (int)x["playerId"] == TekashiPlayerId).FirstOrDefault()["count"];
+        var lowTekashiCountList = ReleaseList.Where(x => (int)x["count"] <= tekashiCount).ToList();
+        if(lowTekashiCountList.Count != 1)
+        {
+            maxPlayerId.Clear();
+            maxPlayerId.Add(TekashiPlayerId);
+        }
+
         var instanceList = new List<Animator>();
-        foreach (var index in maxPlayerIndex)
+        var posy = 130f;
+        foreach (var id in maxPlayerId)
         {
             var obj = (GameObject)Resources.Load("LoserPlayerPanel");
             // プレハブを元にオブジェクトを生成する
             GameObject instance = Instantiate(obj, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
             instance.transform.SetParent(ModalBackPanel.transform);
             instance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            instance.transform.localPosition = new Vector3(0, 130f, 0);
+            instance.transform.localPosition = new Vector3(0, posy, 0);
+            instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == id).FirstOrDefault()["name"].ToString();
             instance.SetActive(true);
             instanceList.Add(instance.GetComponent<Animator>());
+            posy -= 90;
         }
 
-        //LoserPlayerName.GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => x["count"]  )
+        //差分のタイトルのオブジェクトを生成する、posyの値が複数負けたプレイヤーがいると変わるから
+        var deltaTitle = (GameObject)Resources.Load("DeltaTitle");
+        // プレハブを元にオブジェクトを生成する
+        GameObject deltaTitleObj = Instantiate(deltaTitle, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        deltaTitleObj.transform.SetParent(ModalBackPanel.transform);
+        deltaTitleObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        deltaTitleObj.transform.localPosition = new Vector3(0, posy, 0);
+        deltaTitleObj.SetActive(true);
+        var deltaTitleAnim = deltaTitleObj.GetComponent<Animator>();
+        posy -= 90;
+
+        //差分のカウントオブジェクト生成
+        var deltaCount = (GameObject)Resources.Load("DeltaCountPanel");
+        GameObject deltaCountObj = Instantiate(deltaCount, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        deltaCountObj.transform.SetParent(ModalBackPanel.transform);
+        deltaCountObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        deltaCountObj.transform.localPosition = new Vector3(0, posy, 0);
+        deltaCountObj.transform.Find("DeltaText").GetComponent<TextMeshProUGUI>().text = (max - min).ToString();
+        deltaCountObj.SetActive(true);
+        var deltaCountAnim = deltaCountObj.GetComponent<Animator>();
+        posy -= 90;
 
         var width = Screen.width * 0.75f;
         var height = Screen.height * 0.75f;
@@ -136,5 +175,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         {
             animator.SetBool("LoserPanelOpen", true);
         }
+        deltaTitleAnim.SetBool("DeltaTitleOpen", true);
+        deltaCountAnim.SetBool("DeltaCountOpen", true);
     }
 }

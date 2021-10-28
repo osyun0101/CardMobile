@@ -11,6 +11,7 @@ public class ReleaseAction : MonoBehaviour
 {
     public static int countNum;
     public GameObject CountText;
+    public GameObject ReleaseButton;
     public void Release()
     {
         var localPlayer = PhotonNetwork.LocalPlayer;
@@ -24,5 +25,6 @@ public class ReleaseAction : MonoBehaviour
             Receivers = ReceiverGroup.All,
         };
         PhotonNetwork.RaiseEvent((byte)EEventType.Release, dic, option, SendOptions.SendReliable);
+        ReleaseButton.SetActive(false);
     }
 }
