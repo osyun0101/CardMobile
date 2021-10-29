@@ -81,7 +81,6 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
             listDic.Add("count", dic["count"]);
             listDic.Add("playerId", dic["index"] + 1);
             ReleaseList.Add(listDic);
-            Debug.Log(ReleaseList.Count);
             if(ReleaseList.Count == PhotonNetwork.PlayerList.Length)
             {
                 Delay();
