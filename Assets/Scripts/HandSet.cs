@@ -26,10 +26,10 @@ public class HandSet : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
             var posx = -250;
 
             //テスト用
-            if (PhotonNetwork.IsMasterClient)
+            /*if (PhotonNetwork.IsMasterClient)
             {
                 data = new string[] { "Joker_Color", "Joker_Color", "Spade01", "Spade01", "Spade01" };
-            }
+            }*/
             
             //テスト用
 

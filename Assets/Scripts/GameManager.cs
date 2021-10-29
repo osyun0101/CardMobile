@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public GameObject TekashiButtom;
     public static bool CanselPhase = false;
     public GameObject TekashiPlayerHandsObj;
+    public GameObject CardSubmitButton;
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             //TekashiButtomアクティブ
             TekashiButtom.SetActive(true);
+            CardSubmitButton.SetActive(true);
             //誰のターンか示すテキスト
             var parent = GameObject.Find("Canvas").transform.Find("SelfHandPanel").Find("YouturnImage");
             var turnText = PhotonNetwork.InstantiateRoomObject("TurnText", new Vector3(0, 0, 0), Quaternion.identity);
