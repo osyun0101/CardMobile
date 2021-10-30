@@ -17,6 +17,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
     public static List<Dictionary<string, object>> ReleaseList = new List<Dictionary<string, object>>();
     public GameObject ModalPanel;
     public GameObject ModalBackPanel;
+    public GameObject ModalScrollViewContent;
     public GameObject LoserTitle;
     private void Awake()
     {
@@ -94,6 +95,10 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         ModalPanel.SetActive(true);
         ModalBackPanel.SetActive(true);
         LoserTitle.SetActive(true);
+        var width = Screen.width * 0.75f;
+        var height = Screen.height * 0.75f;
+        ModalBackPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+        ModalScrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
         //Countが最も大きいプレイヤーの情報を取得
         int max = 0;
         int min = 100;
@@ -134,9 +139,9 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
             var obj = (GameObject)Resources.Load("LoserPlayerPanel");
             // プレハブを元にオブジェクトを生成する
             GameObject instance = Instantiate(obj, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            instance.transform.SetParent(ModalBackPanel.transform);
+            instance.transform.SetParent(ModalScrollViewContent.transform);
             instance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            instance.transform.localPosition = new Vector3(0, posy, 0);
+            instance.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, posy, 0);
             instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == id).FirstOrDefault()["name"].ToString();
             instance.SetActive(true);
             instanceList.Add(instance.GetComponent<Animator>());
@@ -147,9 +152,9 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         var deltaTitle = (GameObject)Resources.Load("DeltaTitle");
         // プレハブを元にオブジェクトを生成する
         GameObject deltaTitleObj = Instantiate(deltaTitle, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-        deltaTitleObj.transform.SetParent(ModalBackPanel.transform);
+        deltaTitleObj.transform.SetParent(ModalScrollViewContent.transform);
         deltaTitleObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        deltaTitleObj.transform.localPosition = new Vector3(0, posy, 0);
+        deltaTitleObj.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, posy, 0);
         deltaTitleObj.SetActive(true);
         var deltaTitleAnim = deltaTitleObj.GetComponent<Animator>();
         posy -= 90;
@@ -157,17 +162,14 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         //差分のカウントオブジェクト生成
         var deltaCount = (GameObject)Resources.Load("DeltaCountPanel");
         GameObject deltaCountObj = Instantiate(deltaCount, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-        deltaCountObj.transform.SetParent(ModalBackPanel.transform);
+        deltaCountObj.transform.SetParent(ModalScrollViewContent.transform);
         deltaCountObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        deltaCountObj.transform.localPosition = new Vector3(0, posy, 0);
+        deltaCountObj.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, posy, 0);
         deltaCountObj.transform.Find("DeltaText").GetComponent<TextMeshProUGUI>().text = (max - min).ToString();
         deltaCountObj.SetActive(true);
         var deltaCountAnim = deltaCountObj.GetComponent<Animator>();
         posy -= 90;
 
-        var width = Screen.width * 0.75f;
-        var height = Screen.height * 0.75f;
-        ModalBackPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
         var anim = ModalPanel.GetComponent<Animator>();
         anim.SetBool("ModalOpen", true);
         foreach(var animator in instanceList)
