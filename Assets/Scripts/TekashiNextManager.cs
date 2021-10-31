@@ -138,12 +138,8 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         {
             var obj = (GameObject)Resources.Load("LoserPlayerPanel");
             // プレハブを元にオブジェクトを生成する
-            GameObject instance = Instantiate(obj, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            instance.transform.SetParent(ModalScrollViewContent.transform);
-            instance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            instance.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, posy, 0);
+            var instance = SetInstance(obj, posy);
             instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == id).FirstOrDefault()["name"].ToString();
-            instance.SetActive(true);
             instanceList.Add(instance.GetComponent<Animator>());
             posy -= 90;
         }
@@ -151,25 +147,24 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         //差分のタイトルのオブジェクトを生成する、posyの値が複数負けたプレイヤーがいると変わるから
         var deltaTitle = (GameObject)Resources.Load("DeltaTitle");
         // プレハブを元にオブジェクトを生成する
-        GameObject deltaTitleObj = Instantiate(deltaTitle, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-        deltaTitleObj.transform.SetParent(ModalScrollViewContent.transform);
-        deltaTitleObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        deltaTitleObj.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, posy, 0);
-        deltaTitleObj.SetActive(true);
+        var deltaTitleObj = SetInstance(deltaTitle, posy);
         var deltaTitleAnim = deltaTitleObj.GetComponent<Animator>();
         posy -= 90;
 
         //差分のカウントオブジェクト生成
         var deltaCount = (GameObject)Resources.Load("DeltaCountPanel");
-        GameObject deltaCountObj = Instantiate(deltaCount, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-        deltaCountObj.transform.SetParent(ModalScrollViewContent.transform);
-        deltaCountObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        deltaCountObj.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, posy, 0);
+        var deltaCountObj = SetInstance(deltaCount, posy);
         deltaCountObj.transform.Find("DeltaText").GetComponent<TextMeshProUGUI>().text = (max - min).ToString();
-        deltaCountObj.SetActive(true);
         var deltaCountAnim = deltaCountObj.GetComponent<Animator>();
         posy -= 90;
 
+        //もう一度プレイするボタンの表示
+        var replayButton = (GameObject)Resources.Load("ReplayButton");
+        var replayButtonObj = SetInstance(replayButton, posy);
+        var replayButtonAnim = replayButtonObj.GetComponent<Animator>();
+        posy -= 90;
+
+        //各モーダル上のオブジェクトのアニメーション実行
         var anim = ModalPanel.GetComponent<Animator>();
         anim.SetBool("ModalOpen", true);
         foreach(var animator in instanceList)
@@ -178,5 +173,16 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         }
         deltaTitleAnim.SetBool("DeltaTitleOpen", true);
         deltaCountAnim.SetBool("DeltaCountOpen", true);
+        replayButtonAnim.SetBool("ReplayButtonOpen", true);
+    }
+
+    public GameObject SetInstance(GameObject loadObject, float posy)
+    {
+        GameObject obj = Instantiate(loadObject, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        obj.transform.SetParent(ModalScrollViewContent.transform);
+        obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        obj.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, posy, 0);
+        obj.SetActive(true);
+        return obj;
     }
 }
