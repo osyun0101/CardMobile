@@ -95,6 +95,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         ModalPanel.SetActive(true);
         ModalBackPanel.SetActive(true);
         LoserTitle.SetActive(true);
+        var modalScrollViewHeight = 280f;
         var width = Screen.width * 0.75f;
         var height = Screen.height * 0.75f;
         ModalBackPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
@@ -141,6 +142,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
             var instance = SetInstance(obj, posy);
             instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == id).FirstOrDefault()["name"].ToString();
             instanceList.Add(instance.GetComponent<Animator>());
+            modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y;
             posy -= 90;
         }
 
@@ -149,11 +151,13 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         // プレハブを元にオブジェクトを生成する
         var deltaTitleObj = SetInstance(deltaTitle, posy);
         var deltaTitleAnim = deltaTitleObj.GetComponent<Animator>();
+        modalScrollViewHeight += deltaTitleObj.GetComponent<RectTransform>().sizeDelta.y;
         posy -= 90;
 
         //差分のカウントオブジェクト生成
         var deltaCount = (GameObject)Resources.Load("DeltaCountPanel");
         var deltaCountObj = SetInstance(deltaCount, posy);
+        modalScrollViewHeight += deltaCountObj.GetComponent<RectTransform>().sizeDelta.y;
         deltaCountObj.transform.Find("DeltaText").GetComponent<TextMeshProUGUI>().text = (max - min).ToString();
         var deltaCountAnim = deltaCountObj.GetComponent<Animator>();
         posy -= 90;
@@ -161,8 +165,19 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         //もう一度プレイするボタンの表示
         var replayButton = (GameObject)Resources.Load("ReplayButton");
         var replayButtonObj = SetInstance(replayButton, posy);
+        modalScrollViewHeight += replayButtonObj.GetComponent<RectTransform>().sizeDelta.y;
         var replayButtonAnim = replayButtonObj.GetComponent<Animator>();
         posy -= 90;
+
+        //Topに戻るボタンの表示
+        var TopRedirectButton = (GameObject)Resources.Load("TopRedirectButton");
+        var TopRedirectButtonObj = SetInstance(TopRedirectButton, posy);
+        modalScrollViewHeight += TopRedirectButtonObj.GetComponent<RectTransform>().sizeDelta.y;
+        //var TopRedirectButtonAnim = TopRedirectButtonObj.GetComponent<Animator>();
+        posy -= 90;
+
+        //モーダル上のスクロールビューのsizeDelta設定
+        //ModalScrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(width, modalScrollViewHeight);
 
         //各モーダル上のオブジェクトのアニメーション実行
         var anim = ModalPanel.GetComponent<Animator>();
