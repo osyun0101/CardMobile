@@ -99,7 +99,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         var width = Screen.width * 0.75f;
         var height = Screen.height * 0.75f;
         ModalBackPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
-        ModalScrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+        ModalScrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, height);
         //Countが最も大きいプレイヤーの情報を取得
         int max = 0;
         int min = 100;
@@ -134,50 +134,46 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         }
 
         var instanceList = new List<Animator>();
-        var posy = 130f;
+        var posy = -130f;
         foreach (var id in maxPlayerId)
         {
             var obj = (GameObject)Resources.Load("LoserPlayerPanel");
             // プレハブを元にオブジェクトを生成する
-            var instance = SetInstance(obj, posy);
+            var instance = SetInstance(obj, posy, 30f, -30f);
             instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == id).FirstOrDefault()["name"].ToString();
             instanceList.Add(instance.GetComponent<Animator>());
             modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y;
-            posy -= 90;
+            posy += -90;
         }
 
         //差分のタイトルのオブジェクトを生成する、posyの値が複数負けたプレイヤーがいると変わるから
         var deltaTitle = (GameObject)Resources.Load("DeltaTitle");
         // プレハブを元にオブジェクトを生成する
-        var deltaTitleObj = SetInstance(deltaTitle, posy);
+        var deltaTitleObj = SetInstance(deltaTitle, posy, 30f, -30f);
         var deltaTitleAnim = deltaTitleObj.GetComponent<Animator>();
         modalScrollViewHeight += deltaTitleObj.GetComponent<RectTransform>().sizeDelta.y;
-        posy -= 90;
+        posy += -90;
 
         //差分のカウントオブジェクト生成
         var deltaCount = (GameObject)Resources.Load("DeltaCountPanel");
-        var deltaCountObj = SetInstance(deltaCount, posy);
+        var deltaCountObj = SetInstance(deltaCount, posy, 30f, -30f);
         modalScrollViewHeight += deltaCountObj.GetComponent<RectTransform>().sizeDelta.y;
         deltaCountObj.transform.Find("DeltaText").GetComponent<TextMeshProUGUI>().text = (max - min).ToString();
         var deltaCountAnim = deltaCountObj.GetComponent<Animator>();
-        posy -= 90;
+        posy += -90;
 
         //もう一度プレイするボタンの表示
         var replayButton = (GameObject)Resources.Load("ReplayButton");
-        var replayButtonObj = SetInstance(replayButton, posy);
+        var replayButtonObj = SetInstance(replayButton, posy, 100f, -100f);
         modalScrollViewHeight += replayButtonObj.GetComponent<RectTransform>().sizeDelta.y;
         var replayButtonAnim = replayButtonObj.GetComponent<Animator>();
-        posy -= 90;
+        posy += -90;
 
         //Topに戻るボタンの表示
         var TopRedirectButton = (GameObject)Resources.Load("TopRedirectButton");
-        var TopRedirectButtonObj = SetInstance(TopRedirectButton, posy);
+        var TopRedirectButtonObj = SetInstance(TopRedirectButton, posy, 100f, -100f);
         modalScrollViewHeight += TopRedirectButtonObj.GetComponent<RectTransform>().sizeDelta.y;
-        //var TopRedirectButtonAnim = TopRedirectButtonObj.GetComponent<Animator>();
-        posy -= 90;
-
-        //モーダル上のスクロールビューのsizeDelta設定
-        //ModalScrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(width, modalScrollViewHeight);
+        posy += -90;
 
         //各モーダル上のオブジェクトのアニメーション実行
         var anim = ModalPanel.GetComponent<Animator>();
@@ -191,12 +187,17 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         replayButtonAnim.SetBool("ReplayButtonOpen", true);
     }
 
-    public GameObject SetInstance(GameObject loadObject, float posy)
+    public GameObject SetInstance(GameObject loadObject, float posy, float left, float right)
     {
         GameObject obj = Instantiate(loadObject, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
         obj.transform.SetParent(ModalScrollViewContent.transform);
         obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        obj.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, posy, 0);
+        var height = obj.GetComponent<RectTransform>().sizeDelta.y;
+        obj.GetComponent<RectTransform>().offsetMin = new Vector2(left, 0f);
+        obj.GetComponent<RectTransform>().offsetMax = new Vector2(right, 0f);
+        obj.GetComponent<RectTransform>().sizeDelta = new Vector2(obj.GetComponent<RectTransform>().sizeDelta.x, height);
+        var x = obj.GetComponent<RectTransform>().localPosition.x;
+        obj.GetComponent<RectTransform>().localPosition= new Vector3(x, posy, 0f);
         obj.SetActive(true);
         return obj;
     }
