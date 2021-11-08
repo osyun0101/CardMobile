@@ -95,7 +95,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         ModalPanel.SetActive(true);
         ModalBackPanel.SetActive(true);
         LoserTitle.SetActive(true);
-        var modalScrollViewHeight = 280f;
+        var modalScrollViewHeight = 200f;
         var width = Screen.width * 0.75f;
         var height = Screen.height * 0.75f;
         ModalBackPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
@@ -135,12 +135,22 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
 
         var instanceList = new List<Animator>();
         var posy = -130f;
-        foreach (var id in maxPlayerId)
+        /*foreach (var id in maxPlayerId)
         {
             var obj = (GameObject)Resources.Load("LoserPlayerPanel");
             // プレハブを元にオブジェクトを生成する
             var instance = SetInstance(obj, posy, 30f, -30f);
             instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == id).FirstOrDefault()["name"].ToString();
+            instanceList.Add(instance.GetComponent<Animator>());
+            modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y;
+            posy += -90;
+        }*/
+        for (var i = 0; i < 3; i++)
+        {
+            var obj = (GameObject)Resources.Load("LoserPlayerPanel");
+            // プレハブを元にオブジェクトを生成する
+            var instance = SetInstance(obj, posy, 30f, -30f);
+            //instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == i).FirstOrDefault()["name"].ToString();
             instanceList.Add(instance.GetComponent<Animator>());
             modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y;
             posy += -90;
@@ -170,11 +180,17 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         posy += -90;
 
         //Topに戻るボタンの表示
-        var TopRedirectButton = (GameObject)Resources.Load("TopRedirectButton");
-        var TopRedirectButtonObj = SetInstance(TopRedirectButton, posy, 100f, -100f);
-        modalScrollViewHeight += TopRedirectButtonObj.GetComponent<RectTransform>().sizeDelta.y;
+        var topRedirectButton = (GameObject)Resources.Load("TopRedirectButton");
+        var topRedirectButtonObj = SetInstance(topRedirectButton, posy, 100f, -100f);
+        modalScrollViewHeight += topRedirectButtonObj.GetComponent<RectTransform>().sizeDelta.y;
+        var topRedirectButtonAnim = topRedirectButtonObj.GetComponent<Animator>();
         posy += -90;
 
+        if(height < modalScrollViewHeight)
+        {
+            ModalScrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, modalScrollViewHeight);
+        }
+        
         //各モーダル上のオブジェクトのアニメーション実行
         var anim = ModalPanel.GetComponent<Animator>();
         anim.SetBool("ModalOpen", true);
@@ -185,6 +201,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         deltaTitleAnim.SetBool("DeltaTitleOpen", true);
         deltaCountAnim.SetBool("DeltaCountOpen", true);
         replayButtonAnim.SetBool("ReplayButtonOpen", true);
+        topRedirectButtonAnim.SetBool("TopRedirectButtonOpen", true);
     }
 
     public GameObject SetInstance(GameObject loadObject, float posy, float left, float right)
