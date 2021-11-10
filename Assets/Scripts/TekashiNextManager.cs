@@ -7,6 +7,8 @@ using ExitGames.Client.Photon;
 using Photon.Realtime;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TekashiNextManager : MonoBehaviour, IOnEventCallback
 {
@@ -135,27 +137,17 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
 
         var instanceList = new List<Animator>();
         var posy = -130f;
-        /*foreach (var id in maxPlayerId)
+        foreach (var id in maxPlayerId)
         {
             var obj = (GameObject)Resources.Load("LoserPlayerPanel");
             // プレハブを元にオブジェクトを生成する
             var instance = SetInstance(obj, posy, 30f, -30f);
             instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == id).FirstOrDefault()["name"].ToString();
             instanceList.Add(instance.GetComponent<Animator>());
-            modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y;
-            posy += -90;
-        }*/
-        for (var i = 0; i < 3; i++)
-        {
-            var obj = (GameObject)Resources.Load("LoserPlayerPanel");
-            // プレハブを元にオブジェクトを生成する
-            var instance = SetInstance(obj, posy, 30f, -30f);
-            //instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = ReleaseList.Where(x => (int)x["playerId"] == i).FirstOrDefault()["name"].ToString();
-            instanceList.Add(instance.GetComponent<Animator>());
-            modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y;
+            modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y + 10;
             posy += -90;
         }
-
+        
         //差分のタイトルのオブジェクトを生成する、posyの値が複数負けたプレイヤーがいると変わるから
         var deltaTitle = (GameObject)Resources.Load("DeltaTitle");
         // プレハブを元にオブジェクトを生成する
