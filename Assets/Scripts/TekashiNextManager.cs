@@ -182,11 +182,10 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         var sortList = ReleaseList.OrderBy(x => x["count"]);
         foreach(var releaseDic in sortList)
         {
-            //LoserPlayerPanelだけど用途同じだからこのオブジェクトでいいやということでこれにしてる
-            var obj = (GameObject)Resources.Load("LoserPlayerPanel");
+            var obj = (GameObject)Resources.Load("ReleasePlayerIndexPanel");
             // プレハブを元にオブジェクトを生成する
-            var instance = SetInstance(obj, posy, 30f, -30f);
-            instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = releaseDic["name"].ToString();
+            var instance = SetInstance(obj, posy, 30f, -(width * 0.3f));
+            instance.transform.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = releaseDic["name"].ToString();
             instanceList.Add(instance.GetComponent<Animator>());
             modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y + 10;
             posy += -90;
