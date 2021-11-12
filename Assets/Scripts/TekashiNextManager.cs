@@ -178,6 +178,20 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         var topRedirectButtonAnim = topRedirectButtonObj.GetComponent<Animator>();
         posy += -90;
 
+        //公開された手札のリストをソート
+        var sortList = ReleaseList.OrderBy(x => x["count"]);
+        foreach(var releaseDic in sortList)
+        {
+            //LoserPlayerPanelだけど用途同じだからこのオブジェクトでいいやということでこれにしてる
+            var obj = (GameObject)Resources.Load("LoserPlayerPanel");
+            // プレハブを元にオブジェクトを生成する
+            var instance = SetInstance(obj, posy, 30f, -30f);
+            instance.transform.Find("LoserPlayerName").GetComponent<TextMeshProUGUI>().text = releaseDic["name"].ToString();
+            instanceList.Add(instance.GetComponent<Animator>());
+            modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y + 10;
+            posy += -90;
+        }
+
         if(height < modalScrollViewHeight)
         {
             ModalScrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, modalScrollViewHeight);
