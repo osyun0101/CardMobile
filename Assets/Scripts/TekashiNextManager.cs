@@ -178,17 +178,53 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         var topRedirectButtonAnim = topRedirectButtonObj.GetComponent<Animator>();
         posy += -90;
 
+        //結果一覧
+        //DeltaTitleだけど使えそうだからこれでいいや的な感じ
+        var releaseIndex = (GameObject)Resources.Load("DeltaTitle");
+        releaseIndex.GetComponent<TextMeshProUGUI>().text = "結果一覧";
+        // プレハブを元にオブジェクトを生成する
+        var releaseIndexObj = SetInstance(deltaTitle, posy, 30f, -30f);
+        releaseIndexObj.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1.0f);
+        var releaseAnim = releaseIndexObj.GetComponent<Animator>();
+        modalScrollViewHeight += releaseIndexObj.GetComponent<RectTransform>().sizeDelta.y;
+        posy += -90;
+
         //公開された手札のリストをソート
         var sortList = ReleaseList.OrderBy(x => x["count"]);
+        var rankNum = 1;
+        var prevCount = 0;
+        var rankObjAnim = new List<Animator>();
         foreach(var releaseDic in sortList)
         {
+            //順位
+            var rank = (GameObject)Resources.Load("DeltaTitle");
+            rank.GetComponent<TextMeshProUGUI>().text = rankNum.ToString();
+            var rankObj = SetInstance(rank, posy, 30f, -(width * 0.9f));
+            rankObj.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1.0f);
+            var rankObjWidth = rankObj.GetComponent<RectTransform>().rect.width;
+            rankObjAnim.Add(rankObj.GetComponent<Animator>());
+            //プレイヤー名
             var obj = (GameObject)Resources.Load("ReleasePlayerIndexPanel");
             // プレハブを元にオブジェクトを生成する
-            var instance = SetInstance(obj, posy, 30f, -(width * 0.3f));
+            var instance = SetInstance(obj, posy, 31f + rankObjWidth, -(width * 0.3f));
             instance.transform.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = releaseDic["name"].ToString();
             instanceList.Add(instance.GetComponent<Animator>());
+            //カウントパネル
+            var releaseCountPanel = (GameObject)Resources.Load("ReleasePlayerIndexPanel");
+            // プレハブを元にオブジェクトを生成する
+            var instance2 = SetInstance(releaseCountPanel, posy, (width * 0.71f), -30f);
+            instance2.transform.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = releaseDic["count"].ToString();
+            instanceList.Add(instance2.GetComponent<Animator>());
+
             modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y + 10;
             posy += -90;
+
+            if(prevCount < (int)releaseDic["count"])
+            {
+                rankNum += 1;
+                prevCount = (int)releaseDic["count"];
+            }
+            
         }
 
         if(height < modalScrollViewHeight)
@@ -203,10 +239,15 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         {
             animator.SetBool("LoserPanelOpen", true);
         }
+        foreach(var animator in rankObjAnim)
+        {
+            animator.SetBool("DeltaTitleOpen", true);
+        }
         deltaTitleAnim.SetBool("DeltaTitleOpen", true);
         deltaCountAnim.SetBool("DeltaCountOpen", true);
         replayButtonAnim.SetBool("ReplayButtonOpen", true);
         topRedirectButtonAnim.SetBool("TopRedirectButtonOpen", true);
+        releaseAnim.SetBool("DeltaTitleOpen", true);
     }
 
     public GameObject SetInstance(GameObject loadObject, float posy, float left, float right)
