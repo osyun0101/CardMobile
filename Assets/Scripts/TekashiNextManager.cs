@@ -191,14 +191,20 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
 
         //公開された手札のリストをソート
         var sortList = ReleaseList.OrderBy(x => x["count"]);
-        var rankNum = 1;
+        var rankNum = 0;
         var prevCount = 0;
         var rankObjAnim = new List<Animator>();
         foreach(var releaseDic in sortList)
         {
+            if (prevCount < (int)releaseDic["count"])
+            {
+                rankNum += 1;
+                prevCount = (int)releaseDic["count"];
+            }
             //順位
             var rank = (GameObject)Resources.Load("DeltaTitle");
             rank.GetComponent<TextMeshProUGUI>().text = rankNum.ToString();
+            rank.GetComponent<TextMeshProUGUI>().fontSize = 60f;
             var rankObj = SetInstance(rank, posy, 30f, -(width * 0.9f));
             rankObj.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1.0f);
             var rankObjWidth = rankObj.GetComponent<RectTransform>().rect.width;
@@ -218,13 +224,6 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
 
             modalScrollViewHeight += instance.GetComponent<RectTransform>().sizeDelta.y + 10;
             posy += -90;
-
-            if(prevCount < (int)releaseDic["count"])
-            {
-                rankNum += 1;
-                prevCount = (int)releaseDic["count"];
-            }
-            
         }
 
         if(height < modalScrollViewHeight)
