@@ -248,7 +248,7 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         }
         deltaTitleAnim.SetBool("DeltaTitleOpen", true);
         deltaCountAnim.SetBool("DeltaCountOpen", true);
-        //マスターのときだけもう一度プレイボタンアクティブ
+        //マスターのときだけもう一度プレイボタンのアニメーション実行
         if (replayButtonAnim != null)
         {
             replayButtonAnim.SetBool("ReplayButtonOpen", true);

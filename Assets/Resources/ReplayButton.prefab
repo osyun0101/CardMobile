@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6223346409506789801}
-  - component: {fileID: 9039287409317238053}
+  - component: {fileID: 4270479662164711090}
   m_Layer: 0
   m_Name: ReplayAction
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 5107651701095663147}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9039287409317238053
+--- !u!114 &4270479662164711090
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,8 +168,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9039287409317238053}
-        m_TargetAssemblyTypeName: ReplayAction, Assembly-CSharp
+      - m_Target: {fileID: 4270479662164711090}
+        m_TargetAssemblyTypeName: RedirectAction, Assembly-CSharp
         m_MethodName: PlayRoomLoad
         m_Mode: 1
         m_Arguments:
