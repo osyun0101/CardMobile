@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9b3d1788f2e4ee99b2b93d661fa7b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!21 &726825407
+--- !u!21 &692385899
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -943,7 +943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 726825407}
+  m_Material: {fileID: 692385899}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

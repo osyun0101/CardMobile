@@ -164,12 +164,16 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         var deltaCountAnim = deltaCountObj.GetComponent<Animator>();
         posy += -90;
 
-        //もう一度プレイするボタンの表示
-        var replayButton = (GameObject)Resources.Load("ReplayButton");
-        var replayButtonObj = SetInstance(replayButton, posy, 100f, -100f);
-        modalScrollViewHeight += replayButtonObj.GetComponent<RectTransform>().sizeDelta.y;
-        var replayButtonAnim = replayButtonObj.GetComponent<Animator>();
-        posy += -90;
+        Animator replayButtonAnim = null;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //もう一度プレイするボタンの表示
+            var replayButton = (GameObject)Resources.Load("ReplayButton");
+            var replayButtonObj = SetInstance(replayButton, posy, 100f, -100f);
+            modalScrollViewHeight += replayButtonObj.GetComponent<RectTransform>().sizeDelta.y;
+            replayButtonAnim = replayButtonObj.GetComponent<Animator>();
+            posy += -90;
+        }
 
         //Topに戻るボタンの表示
         var topRedirectButton = (GameObject)Resources.Load("TopRedirectButton");
@@ -244,7 +248,11 @@ public class TekashiNextManager : MonoBehaviour, IOnEventCallback
         }
         deltaTitleAnim.SetBool("DeltaTitleOpen", true);
         deltaCountAnim.SetBool("DeltaCountOpen", true);
-        replayButtonAnim.SetBool("ReplayButtonOpen", true);
+        //マスターのときだけもう一度プレイボタンアクティブ
+        if (replayButtonAnim != null)
+        {
+            replayButtonAnim.SetBool("ReplayButtonOpen", true);
+        }
         topRedirectButtonAnim.SetBool("TopRedirectButtonOpen", true);
         releaseAnim.SetBool("DeltaTitleOpen", true);
     }
